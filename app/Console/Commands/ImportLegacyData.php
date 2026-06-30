@@ -11,6 +11,7 @@ use App\Support\LegacySqlDump;
 use Carbon\CarbonInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ImportLegacyData extends Command
 {
@@ -49,12 +50,13 @@ class ImportLegacyData extends Command
             $rows[] = [
                 'id' => (int) $row['id'],
                 'name' => $row['name'],
+                'slug' => Str::slug($row['name']),
                 'created_at' => $row['created_at'] ?: $now,
                 'updated_at' => $row['updated_at'] ?: $now,
             ];
         }
 
-        Category::query()->upsert($rows, ['id'], ['name', 'created_at', 'updated_at']);
+        Category::query()->upsert($rows, ['id'], ['name', 'slug', 'created_at', 'updated_at']);
         $this->components->info('Imported categories: '.count($rows));
     }
 

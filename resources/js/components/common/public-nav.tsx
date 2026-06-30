@@ -1,11 +1,11 @@
 import { Link, usePage } from '@inertiajs/react';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import { about, contact } from '@/routes';
+import { about, contact, products } from '@/routes';
 
 const navItems = [
     { label: 'Home', href: '/' },
-    { label: 'Equipments', href: '#equipment' },
+    { label: 'Equipments', href: products.url() },
     { label: 'About', href: about.url() },
     { label: 'Contact Us', href: contact.url() },
 ];
@@ -25,7 +25,7 @@ export function PublicNav() {
     return (
         <header className="absolute inset-x-0 top-0 z-30">
             <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
-                <Link href="/" className="flex items-center gap-3">
+                <Link href="/" prefetch className="flex items-center gap-3">
                     <img
                         src="/images/icons/logo.png"
                         alt="KH Equipment Hub"
@@ -41,7 +41,7 @@ export function PublicNav() {
                         <Link
                             key={item.href}
                             href={item.href}
-                            prefetch={!item.href.startsWith('#')}
+                            prefetch
                             className={`border-b-2 pb-1 font-medium transition hover:border-brand-gold hover:text-white ${
                                 isActive(item.href)
                                     ? 'border-brand-gold text-white'
@@ -73,7 +73,7 @@ export function PublicNav() {
                         <Link
                             key={item.href}
                             href={item.href}
-                            prefetch={!item.href.startsWith('#')}
+                            prefetch
                             onClick={() => setOpen(false)}
                             className={`block border-b px-3 py-3 text-sm font-medium hover:border-brand-gold hover:bg-muted ${
                                 isActive(item.href)

@@ -11,13 +11,20 @@ type ContactFormData = {
 };
 
 export function ContactForm() {
-    const { data, setData, post, processing, errors, reset, recentlySuccessful } =
-        useForm<ContactFormData>({
-            name: '',
-            email: '',
-            message: '',
-            website: '',
-        });
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        errors,
+        reset,
+        recentlySuccessful,
+    } = useForm<ContactFormData>({
+        name: '',
+        email: '',
+        message: '',
+        website: '',
+    });
 
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();

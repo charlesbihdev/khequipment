@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { ReactNode, useRef, useState } from 'react';
-import { home } from '@/routes';
+import { products } from '@/routes';
 
 type HeroSectionProps = {
     nav: ReactNode;
@@ -58,7 +58,8 @@ export function HeroSection({ nav }: HeroSectionProps) {
                     </p>
                     <div className="mt-10 flex justify-center">
                         <Link
-                            href={`${home.url()}#equipment`}
+                            href={products.url()}
+                            prefetch
                             className="inline-flex items-center justify-center rounded-lg bg-brand-gold px-6 py-3 text-xl font-semibold text-brand-gold-foreground transition hover:bg-white"
                         >
                             Explore our Products

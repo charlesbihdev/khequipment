@@ -1,9 +1,15 @@
 import { Link } from '@inertiajs/react';
-import { Facebook, Instagram, Linkedin, Mail, MessageCircle } from 'lucide-react';
-import { about, contact } from '@/routes';
+import {
+    Facebook,
+    Instagram,
+    Linkedin,
+    Mail,
+    MessageCircle,
+} from 'lucide-react';
+import { about, contact, products } from '@/routes';
 
 const quickLinks = [
-    { label: 'Products', href: '#equipment' },
+    { label: 'Products', href: products.url() },
     { label: 'About Us', href: about.url() },
     { label: 'Contact Us', href: contact.url() },
 ];
@@ -54,7 +60,7 @@ export function Footer() {
                                     <span className="mt-2.5 size-2 bg-brand-gold" />
                                     <Link
                                         href={item.href}
-                                        prefetch={!item.href.startsWith('#')}
+                                        prefetch
                                         className="border-b-2 border-transparent pb-1 text-white/82 transition hover:border-brand-gold hover:text-brand-gold"
                                     >
                                         {item.label}
