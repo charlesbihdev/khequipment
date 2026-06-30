@@ -5,7 +5,6 @@
 /bootstrap/cache/*.php
 /database/*.sqlite
 /node_modules
-/public/build
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
