@@ -1,0 +1,171 @@
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans:
+        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
+    --font-body: var(--font-sans);
+    --font-heading: var(--font-sans);
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-success: var(--success);
+    --color-success-foreground: var(--success-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    --color-brand-steel: var(--brand-steel);
+    --color-brand-steel-foreground: var(--brand-steel-foreground);
+    --color-brand-gold: var(--brand-gold);
+    --color-brand-gold-foreground: var(--brand-gold-foreground);
+    --color-brand-concrete: var(--brand-concrete);
+    --color-brand-concrete-foreground: var(--brand-concrete-foreground);
+}
+
+:root {
+    --background: oklch(0.985 0.004 97);
+    --foreground: oklch(0.18 0.021 250);
+    --card: oklch(1 0 0);
+    --card-foreground: var(--foreground);
+    --popover: oklch(1 0 0);
+    --popover-foreground: var(--foreground);
+    --primary: oklch(0.31 0.046 249);
+    --primary-foreground: oklch(0.985 0.004 97);
+    --secondary: oklch(0.93 0.01 250);
+    --secondary-foreground: oklch(0.24 0.035 249);
+    --muted: oklch(0.94 0.007 250);
+    --muted-foreground: oklch(0.48 0.021 250);
+    --accent: oklch(0.78 0.158 78);
+    --accent-foreground: oklch(0.19 0.022 72);
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.985 0.004 97);
+    --success: oklch(0.54 0.12 158);
+    --success-foreground: oklch(0.985 0.004 97);
+    --border: oklch(0.87 0.01 250);
+    --input: oklch(0.89 0.01 250);
+    --ring: oklch(0.55 0.07 249);
+    --chart-1: var(--primary);
+    --chart-2: var(--accent);
+    --chart-3: oklch(0.55 0.11 168);
+    --chart-4: oklch(0.58 0.12 32);
+    --chart-5: oklch(0.52 0.1 282);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.96 0.006 250);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: oklch(0.91 0.014 250);
+    --sidebar-accent-foreground: var(--foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
+    --brand-steel: var(--primary);
+    --brand-steel-foreground: var(--primary-foreground);
+    --brand-gold: var(--accent);
+    --brand-gold-foreground: var(--accent-foreground);
+    --brand-concrete: oklch(0.72 0.018 250);
+    --brand-concrete-foreground: var(--foreground);
+}
+
+.dark {
+    --background: oklch(0.16 0.018 250);
+    --foreground: oklch(0.96 0.004 97);
+    --card: oklch(0.2 0.022 250);
+    --card-foreground: var(--foreground);
+    --popover: oklch(0.2 0.022 250);
+    --popover-foreground: var(--foreground);
+    --primary: oklch(0.76 0.145 78);
+    --primary-foreground: oklch(0.17 0.018 72);
+    --secondary: oklch(0.27 0.026 250);
+    --secondary-foreground: var(--foreground);
+    --muted: oklch(0.27 0.026 250);
+    --muted-foreground: oklch(0.72 0.015 250);
+    --accent: oklch(0.35 0.045 249);
+    --accent-foreground: var(--foreground);
+    --destructive: oklch(0.396 0.141 25.723);
+    --destructive-foreground: var(--foreground);
+    --success: oklch(0.68 0.12 158);
+    --success-foreground: oklch(0.13 0.018 158);
+    --border: oklch(0.32 0.026 250);
+    --input: oklch(0.32 0.026 250);
+    --ring: oklch(0.67 0.09 78);
+    --chart-1: var(--primary);
+    --chart-2: oklch(0.64 0.11 168);
+    --chart-3: oklch(0.72 0.13 32);
+    --chart-4: oklch(0.68 0.12 282);
+    --chart-5: oklch(0.58 0.08 249);
+    --sidebar: oklch(0.19 0.022 250);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: oklch(0.27 0.026 250);
+    --sidebar-accent-foreground: var(--foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
+    --brand-steel: oklch(0.68 0.06 249);
+    --brand-steel-foreground: oklch(0.13 0.018 250);
+    --brand-gold: var(--primary);
+    --brand-gold-foreground: var(--primary-foreground);
+    --brand-concrete: oklch(0.48 0.022 250);
+    --brand-concrete-foreground: var(--foreground);
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+        font-family: var(--font-body);
+    }
+}
