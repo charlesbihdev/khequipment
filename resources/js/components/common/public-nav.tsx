@@ -19,7 +19,11 @@ export function PublicNav() {
             return url === '/';
         }
 
-        return url === href || url.startsWith(`${href}?`);
+        return (
+            url === href ||
+            url.startsWith(`${href}?`) ||
+            url.startsWith(`${href}/`)
+        );
     };
 
     return (

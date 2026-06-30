@@ -21,6 +21,7 @@ export function ProductsPagination({ links }: ProductsPaginationProps) {
                     <Link
                         key={`${link.label}-${index}`}
                         href={link.url}
+                        only={['products']}
                         preserveScroll
                         prefetch
                         className={`rounded-md border px-4 py-2 text-base font-bold transition ${

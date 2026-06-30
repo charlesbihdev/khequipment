@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $category_id
  * @property string $name
+ * @property string $slug
  * @property string|null $brand
  * @property bool $is_new
  * @property string|null $powered_by
@@ -24,6 +25,7 @@ use Illuminate\Support\Carbon;
 #[Fillable([
     'category_id',
     'name',
+    'slug',
     'brand',
     'is_new',
     'powered_by',

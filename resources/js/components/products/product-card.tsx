@@ -1,4 +1,6 @@
+import { Link, usePage } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';
+import { show } from '@/routes/products';
 import type { ProductCardItem } from '@/types/products';
 
 type ProductCardProps = {
@@ -6,8 +8,14 @@ type ProductCardProps = {
 };
 
 export function ProductCard({ product }: ProductCardProps) {
+    const { url } = usePage();
+
     return (
-        <article className="group overflow-hidden rounded-md border border-border bg-card shadow-sm transition hover:border-brand-gold hover:shadow-md">
+        <Link
+            href={show.url(product.slug, { query: { returnTo: url } })}
+            prefetch
+            className="group block cursor-pointer overflow-hidden rounded-md border border-border bg-card shadow-sm transition hover:border-brand-gold hover:shadow-md"
+        >
             <div className="relative aspect-[4/3] bg-muted">
                 {product.imageUrl ? (
                     <img
@@ -42,6 +50,6 @@ export function ProductCard({ product }: ProductCardProps) {
                     <ArrowRight className="ml-auto size-6 text-muted-foreground transition group-hover:text-brand-gold" />
                 </div>
             </div>
-        </article>
+        </Link>
     );
 }

@@ -69,6 +69,7 @@ class ImportLegacyData extends Command
                 'id' => (int) $row['id'],
                 'category_id' => (int) $row['category'],
                 'name' => $row['productName'],
+                'slug' => Str::slug($row['productName']).'-'.$row['id'],
                 'brand' => $this->nullableString($row['brand']),
                 'is_new' => (bool) $row['isNew'],
                 'powered_by' => $this->nullableString($row['poweredBy']),
