@@ -8,8 +8,8 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Quote;
 use App\Support\LegacySqlDump;
+use Carbon\CarbonInterface;
 use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ImportLegacyData extends Command
@@ -41,7 +41,7 @@ class ImportLegacyData extends Command
         return self::SUCCESS;
     }
 
-    private function importCategories(LegacySqlDump $dump, Carbon $now): void
+    private function importCategories(LegacySqlDump $dump, CarbonInterface $now): void
     {
         $rows = [];
 
@@ -58,7 +58,7 @@ class ImportLegacyData extends Command
         $this->components->info('Imported categories: '.count($rows));
     }
 
-    private function importProducts(LegacySqlDump $dump, Carbon $now): void
+    private function importProducts(LegacySqlDump $dump, CarbonInterface $now): void
     {
         $rows = [];
 
@@ -82,7 +82,7 @@ class ImportLegacyData extends Command
         $this->components->info('Imported products: '.count($rows));
     }
 
-    private function importProductImages(LegacySqlDump $dump, Carbon $now): void
+    private function importProductImages(LegacySqlDump $dump, CarbonInterface $now): void
     {
         $rows = [];
 
@@ -100,7 +100,7 @@ class ImportLegacyData extends Command
         $this->components->info('Imported product images: '.count($rows));
     }
 
-    private function importQuotes(LegacySqlDump $dump, Carbon $now): void
+    private function importQuotes(LegacySqlDump $dump, CarbonInterface $now): void
     {
         $rows = [];
 
@@ -125,7 +125,7 @@ class ImportLegacyData extends Command
         $this->components->info('Imported quotes: '.count($rows));
     }
 
-    private function importContacts(LegacySqlDump $dump, Carbon $now): void
+    private function importContacts(LegacySqlDump $dump, CarbonInterface $now): void
     {
         $rows = [];
 
