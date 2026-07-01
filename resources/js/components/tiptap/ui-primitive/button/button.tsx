@@ -51,6 +51,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       shortcutKeys,
       variant,
       size,
+      type = "button",
       ...props
     },
     ref
@@ -68,6 +69,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           ref={ref}
           data-style={variant}
           data-size={size}
+          type={type}
           {...props}
         >
           {children}
@@ -83,6 +85,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           ref={ref}
           data-style={variant}
           data-size={size}
+          type={type}
           {...props}
         >
           {children}

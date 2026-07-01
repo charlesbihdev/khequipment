@@ -44,5 +44,7 @@ export function prepareTiptapContent(html: string): PreparedContent {
     }
   });
 
+  updatedHtml = updatedHtml.replace(/<img\b[^>]*\bsrc="blob:[^"]+"[^>]*>/g, "");
+
   return { content: updatedHtml, files };
 }

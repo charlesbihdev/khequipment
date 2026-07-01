@@ -23,7 +23,7 @@ class ProjectController extends Controller
                 'clientName' => $project->client_name,
                 'location' => $project->location,
                 'summary' => $project->summary,
-                'content' => $project->content,
+                'content' => Project::sanitizeTiptapContent($project->content),
                 'status' => $project->status,
                 'startedAt' => $project->started_at?->toFormattedDateString(),
                 'completedAt' => $project->completed_at?->toFormattedDateString(),

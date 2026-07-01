@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,7 +19,7 @@ class CategoryController extends Controller
             'categories' => Category::query()
                 ->withCount('products')
                 ->orderBy('name')
-                ->paginate(12),
+                ->paginate(30),
         ]);
     }
 
@@ -67,6 +68,14 @@ class CategoryController extends Controller
         ]);
 
         $data['slug'] = Str::slug($data['slug'] ?: $data['name']);
+        $exists = Category::query()
+            ->where('slug', $data['slug'])
+            ->when($category, fn ($query) => $query->whereKeyNot($category->id))
+            ->exists();
+
+        if ($exists) {
+            throw ValidationException::withMessages(['slug' => 'The slug has already been taken.']);
+        }
 
         return $data;
     }

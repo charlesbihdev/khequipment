@@ -50,6 +50,18 @@ use Illuminate\Support\Carbon;
 ])]
 class Project extends Model
 {
+    public static function sanitizeTiptapContent(?string $content): ?string
+    {
+        if ($content === null || $content === '') {
+            return $content;
+        }
+
+        $content = preg_replace('/<img\b[^>]*\bsrc=["\']blob:[^"\']+["\'][^>]*>/i', '', $content) ?? $content;
+        $content = preg_replace('/\s(?:src|href)=["\']blob:[^"\']+["\']/i', '', $content) ?? $content;
+
+        return str_replace(['src="blob:', "src='blob:"], ['src="', "src='"], $content);
+    }
+
     public function images(): HasMany
     {
         return $this->hasMany(ProjectImage::class);

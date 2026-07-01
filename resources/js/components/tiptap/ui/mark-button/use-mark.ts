@@ -76,7 +76,7 @@ export function canToggleMark(editor: Editor | null, type: Mark): boolean {
   if (!isMarkInSchema(type, editor) || isNodeTypeSelected(editor, ["image"]))
     return false
 
-  return editor.can().toggleMark(type)
+  return editor.can().chain().focus().toggleMark(type).run()
 }
 
 /**
@@ -178,6 +178,7 @@ export function useMark(config: UseMarkConfig) {
 
   const { editor } = useTiptapEditor(providedEditor)
   const [isVisible, setIsVisible] = useState<boolean>(true)
+  const [, setRefreshKey] = useState(0)
   const canToggle = canToggleMark(editor, type)
   const isActive = isMarkActive(editor, type)
 
@@ -186,14 +187,17 @@ export function useMark(config: UseMarkConfig) {
 
     const handleSelectionUpdate = () => {
       setIsVisible(shouldShowButton({ editor, type, hideWhenUnavailable }))
+      setRefreshKey((key) => key + 1)
     }
 
     handleSelectionUpdate()
 
     editor.on("selectionUpdate", handleSelectionUpdate)
+    editor.on("transaction", handleSelectionUpdate)
 
     return () => {
       editor.off("selectionUpdate", handleSelectionUpdate)
+      editor.off("transaction", handleSelectionUpdate)
     }
   }, [editor, type, hideWhenUnavailable])
 
