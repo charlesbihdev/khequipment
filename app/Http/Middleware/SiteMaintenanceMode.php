@@ -35,6 +35,14 @@ class SiteMaintenanceMode
     {
         return $request->is(
             'maintenance-bypass',
+            'kh-private-access',
+            'dashboard',
+            'admin',
+            'admin/*',
+            'settings',
+            'settings/*',
+            'logout',
+            'user/*',
             'up',
             'build/*',
             'images/*',
