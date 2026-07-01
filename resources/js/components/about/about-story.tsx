@@ -1,7 +1,7 @@
 const paragraphs = [
     'KH Equipment Hub is a trusted industry leader specializing in the supply of top-quality mining, construction, and road construction equipment, as well as spare parts.',
-    'In addition to our range of equipment, we also offer solar systems and generators, providing reliable solutions for energy needs.',
-    'Our commitment to customer satisfaction extends beyond the point of sale, with real warranties and after-sales service for our clients.',
+    'In addition to our range of equipment, we also offer solar systems, generators, waterproofing solutions, and construction work.',
+    'Our commitment to customer satisfaction extends beyond the point of sale, with real warranties and spare-parts support for our clients.',
     'We make buying easier with a professional sales team that provides personalized assistance and expert guidance every step of the way.',
 ];
 

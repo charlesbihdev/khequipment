@@ -2,6 +2,7 @@ import { Deferred, Head } from '@inertiajs/react';
 import { Footer } from '@/components/common/footer';
 import { PublicNav } from '@/components/common/public-nav';
 import { AboutSection } from '@/components/home/about-section';
+import { ConstructionWorkSection } from '@/components/home/construction-work-section';
 import { EquipmentPreview } from '@/components/home/equipment-preview';
 import { HeroSection } from '@/components/home/hero-section';
 import { ProjectsSection } from '@/components/home/projects-section';
@@ -20,10 +21,16 @@ export default function Home({ promos = [], projects }: HomeProps) {
             <Head title="Construction Equipment, Generators & Machinery in Ghana" />
             <main className="min-h-screen bg-background font-public text-foreground">
                 <HeroSection nav={<PublicNav />} />
-                <Deferred data="promos" fallback={<TodaysDeal promos={[]} loading />}>
-                    <TodaysDeal promos={promos} />
-                </Deferred>
+                <div id="todays-deal" className="[scroll-margin-top:-4rem]">
+                    <Deferred
+                        data="promos"
+                        fallback={<TodaysDeal promos={[]} loading />}
+                    >
+                        <TodaysDeal promos={promos} />
+                    </Deferred>
+                </div>
                 <AboutSection />
+                {/* <ConstructionWorkSection /> */}
                 <Deferred
                     data="projects"
                     fallback={<ProjectsSection loading />}
