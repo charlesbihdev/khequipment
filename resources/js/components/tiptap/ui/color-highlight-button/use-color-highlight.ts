@@ -172,7 +172,7 @@ export function canColorHighlight(
     )
       return false
 
-    return editor.can().setMark("highlight")
+    return editor.can().chain().focus().setMark("highlight").run()
   } else {
     if (!isExtensionAvailable(editor, ["nodeBackground"])) return false
 
@@ -288,6 +288,7 @@ export function useColorHighlight(config: UseColorHighlightConfig) {
   const { editor } = useTiptapEditor(providedEditor)
   const isMobile = useIsBreakpoint()
   const [isVisible, setIsVisible] = useState<boolean>(true)
+  const [, setRefreshKey] = useState(0)
   const canColorHighlightState = canColorHighlight(editor, mode)
   const actualColor = highlightColor
     ? getHighlightColorValue(highlightColor, useColorValue)
@@ -299,14 +300,17 @@ export function useColorHighlight(config: UseColorHighlightConfig) {
 
     const handleSelectionUpdate = () => {
       setIsVisible(shouldShowButton({ editor, hideWhenUnavailable, mode }))
+      setRefreshKey((key) => key + 1)
     }
 
     handleSelectionUpdate()
 
     editor.on("selectionUpdate", handleSelectionUpdate)
+    editor.on("transaction", handleSelectionUpdate)
 
     return () => {
       editor.off("selectionUpdate", handleSelectionUpdate)
+      editor.off("transaction", handleSelectionUpdate)
     }
   }, [editor, hideWhenUnavailable, mode])
 

@@ -2,6 +2,7 @@ import { SimpleEditor } from '@/components/tiptap/templates/simple/simple-editor
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { useState } from 'react';
 
 type ProjectContentEditorProps = {
     value: string;
@@ -18,6 +19,12 @@ export function ProjectContentEditor({
     label = 'Content',
     placeholder = 'Write the project, contract, or service details...',
 }: ProjectContentEditorProps) {
+    const [editorKey, setEditorKey] = useState(0);
+    const clear = () => {
+        onChange('');
+        setEditorKey((key) => key + 1);
+    };
+
     return (
         <div className="grid gap-2">
             <div className="flex items-center justify-between gap-3">
@@ -27,7 +34,7 @@ export function ProjectContentEditor({
                         type="button"
                         variant="ghost"
                         size="sm"
-                        onClick={() => onChange('')}
+                        onClick={clear}
                     >
                         Reset content
                     </Button>
@@ -35,6 +42,7 @@ export function ProjectContentEditor({
             </div>
 
             <SimpleEditor
+                key={editorKey}
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}

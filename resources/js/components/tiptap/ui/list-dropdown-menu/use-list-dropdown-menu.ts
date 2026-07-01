@@ -173,6 +173,7 @@ export function useListDropdownMenu(config?: UseListDropdownMenuConfig) {
 
   const { editor } = useTiptapEditor(providedEditor)
   const [isVisible, setIsVisible] = useState(true)
+  const [, setRefreshKey] = useState(0)
 
   const listInSchema = types.some((type) => isNodeInSchema(type, editor))
 
@@ -196,14 +197,17 @@ export function useListDropdownMenu(config?: UseListDropdownMenuConfig) {
           canToggleAny,
         })
       )
+      setRefreshKey((key) => key + 1)
     }
 
     handleSelectionUpdate()
 
     editor.on("selectionUpdate", handleSelectionUpdate)
+    editor.on("transaction", handleSelectionUpdate)
 
     return () => {
       editor.off("selectionUpdate", handleSelectionUpdate)
+      editor.off("transaction", handleSelectionUpdate)
     }
   }, [canToggleAny, editor, hideWhenUnavailable, listInSchema, types])
 

@@ -30,7 +30,7 @@ export default function Home({ promos = [], projects }: HomeProps) {
                     </Deferred>
                 </div>
                 <AboutSection />
-                <ConstructionWorkSection />
+                {/* <ConstructionWorkSection /> */}
                 <Deferred
                     data="projects"
                     fallback={<ProjectsSection loading />}
