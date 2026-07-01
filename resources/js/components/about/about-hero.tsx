@@ -15,8 +15,9 @@ export function AboutHero() {
                     <span className="text-brand-gold">About</span> Us
                 </p>
                 <h1 className="mt-5 text-2xl leading-9 font-semibold text-white/85 sm:text-3xl">
-                    KH Equipment Hub supplies equipment, spare parts, and energy
-                    solutions for construction, mining, and road work.
+                    KH Equipment Hub supplies equipment, spare parts, energy
+                    systems, waterproofing solutions, and construction work
+                    for mining, building, and road projects.
                 </h1>
             </div>
         </section>

@@ -1,13 +1,17 @@
 const strengths = [
     'Warranty-backed machines',
-    'Practical rental support',
+    'Construction work',
     'Spare parts supply',
+    'Waterproofing solutions',
     'Pro sales guidance',
 ];
 
 export function AboutSection() {
     return (
-        <section id="about" className="bg-background pt-10 pb-16 sm:pt-12 sm:pb-20">
+        <section
+            id="about"
+            className="bg-background pt-10 pb-16 sm:pt-12 sm:pb-20"
+        >
             <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:px-8">
                 <div>
                     <p className="text-5xl leading-tight font-extrabold text-foreground sm:text-6xl">
@@ -21,13 +25,14 @@ export function AboutSection() {
                         <p>
                             KH Equipment Hub supplies mining equipment,
                             construction machines, generators, solar systems,
-                            electrical equipment, and spare parts for work
-                            across Ghana.
+                            electrical equipment, spare parts, and waterproofing
+                            solutions. We also handle construction work across
+                            Ghana.
                         </p>
                         <p>
                             The business is built around making equipment buying
                             easier: practical guidance, strong machines, real
-                            warranty, and after-sales support when the work is
+                            warranty, and spare-parts support when the work is
                             already moving.
                         </p>
                     </div>

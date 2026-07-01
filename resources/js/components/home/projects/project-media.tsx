@@ -6,6 +6,10 @@ type ProjectMediaProps = {
 };
 
 export function ProjectMedia({ project, compact = false }: ProjectMediaProps) {
+    const mediaClassName = compact
+        ? 'aspect-video w-full bg-white object-contain p-3'
+        : 'h-full min-h-[320px] w-full object-cover';
+
     if (!project.mediaUrl) {
         return (
             <div
@@ -18,7 +22,7 @@ export function ProjectMedia({ project, compact = false }: ProjectMediaProps) {
         return (
             <video
                 src={project.mediaUrl}
-                className={`${compact ? 'aspect-video' : 'h-full min-h-[320px]'} w-full object-cover`}
+                className={mediaClassName}
                 autoPlay
                 muted
                 loop
@@ -31,7 +35,7 @@ export function ProjectMedia({ project, compact = false }: ProjectMediaProps) {
         <img
             src={project.mediaUrl}
             alt={project.title}
-            className={`${compact ? 'aspect-video' : 'h-full min-h-[320px]'} w-full object-cover`}
+            className={mediaClassName}
             loading="lazy"
         />
     );

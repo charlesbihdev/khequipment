@@ -5,6 +5,7 @@ import {
     Linkedin,
     Mail,
     MessageCircle,
+    Youtube,
 } from 'lucide-react';
 import { about, contact, products } from '@/routes';
 
@@ -29,6 +30,11 @@ const socialLinks = [
         label: 'Instagram',
         icon: Instagram,
         href: 'https://www.instagram.com/kh.equipment.hub',
+    },
+    {
+        label: 'YouTube',
+        icon: Youtube,
+        href: 'https://www.youtube.com/@KhequipmentHub',
     },
     {
         label: 'Email',
@@ -101,11 +107,12 @@ export function Footer() {
                     <h2 className="text-2xl font-bold">About Us</h2>
                     <div className="mt-7 border-t border-white/15 pt-6">
                         <p className="max-w-md text-xl leading-9 text-white/78">
-                            KH Equipment Hub: A Name You Can Trust. We supply
+                            KH Equipment Hub: A Name You Trust. We supply
                             construction machines and equipment, heavy-duty
                             equipment, generators, solar systems, electrical
-                            equipment, and more. We offer the best quality and
-                            prices in Ghana.
+                            equipment, spare parts, and waterproofing
+                            solutions. We also handle construction work with
+                            the best quality and prices in Ghana.
                         </p>
                     </div>
                 </div>
