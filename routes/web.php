@@ -5,6 +5,12 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
+use App\Http\Controllers\Admin\PromoController as AdminPromoController;
+use App\Http\Controllers\Admin\QuoteController as AdminQuoteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,7 +44,14 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->name('contact.store');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::resource('categories', AdminCategoryController::class)->except('show');
+        Route::resource('products', AdminProductController::class)->except('show');
+        Route::resource('projects', AdminProjectController::class)->except('show');
+        Route::resource('promos', AdminPromoController::class)->except('show');
+        Route::resource('quotes', AdminQuoteController::class)->only(['index', 'show', 'destroy']);
+    });
 });
 
 require __DIR__.'/settings.php';
