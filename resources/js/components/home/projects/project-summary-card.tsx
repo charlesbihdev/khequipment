@@ -11,7 +11,7 @@ type ProjectSummaryCardProps = {
 
 export function ProjectSummaryCard({ project }: ProjectSummaryCardProps) {
     return (
-        <article className="w-[78vw] shrink-0 overflow-hidden rounded-md border border-border bg-card shadow-sm transition hover:-translate-y-1 hover:shadow-md sm:w-[340px]">
+        <article className="w-[calc(100vw-2rem)] shrink-0 overflow-hidden rounded-md border border-border bg-card shadow-sm transition hover:-translate-y-1 hover:shadow-md sm:w-[calc((100vw-4rem)/2)] md:w-[calc((100vw-6rem)/3)] lg:w-[320px] xl:w-[330px]">
             <ProjectMedia project={project} compact />
             <div className="p-4">
                 <ProjectStatus category={project.category} />
