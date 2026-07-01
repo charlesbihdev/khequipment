@@ -3,11 +3,11 @@ export function ProjectsSectionSkeleton() {
         <section id="projects" className="bg-background py-14 sm:py-[4.5rem]">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="h-16 max-w-3xl animate-pulse rounded-md bg-muted" />
-                <div className="mt-8 flex gap-5 overflow-hidden">
+                <div className="mx-auto mt-8 flex max-w-[1040px] justify-start gap-5 overflow-hidden px-1">
                     {[1, 2, 3].map((item) => (
                         <div
                             key={item}
-                            className="w-[78vw] shrink-0 overflow-hidden rounded-md border border-border bg-card sm:w-[340px]"
+                            className="w-[calc(100vw-2rem)] shrink-0 overflow-hidden rounded-md border border-border bg-card sm:w-[calc((100vw-4rem)/2)] md:w-[calc((100vw-6rem)/3)] lg:w-[320px] xl:w-[330px]"
                         >
                             <div className="aspect-video animate-pulse bg-muted" />
                             <div className="space-y-3 p-4">
