@@ -58,7 +58,7 @@ export function EquipmentPreview() {
                             <img
                                 src={item.image}
                                 alt={item.name}
-                                className="aspect-4/3 w-full object-cover"
+                                className="aspect-4/3 w-full bg-white object-contain p-3"
                             />
                             <div className="p-5">
                                 <h3 className="text-xl font-black">
