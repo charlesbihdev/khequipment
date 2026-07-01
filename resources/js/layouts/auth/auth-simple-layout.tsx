@@ -1,5 +1,4 @@
 import { Link } from '@inertiajs/react';
-import AppLogoIcon from '@/components/app-logo-icon';
 import { home } from '@/routes';
 import type { AuthLayoutProps } from '@/types';
 
@@ -9,28 +8,36 @@ export default function AuthSimpleLayout({
     description,
 }: AuthLayoutProps) {
     return (
-        <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
-            <div className="w-full max-w-sm">
-                <div className="flex flex-col gap-8">
-                    <div className="flex flex-col items-center gap-4">
+        <div className="flex min-h-svh flex-col items-center justify-center bg-brand-steel px-5 py-8 text-brand-steel-foreground md:p-10">
+            <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),transparent_34%),radial-gradient(circle_at_80%_10%,rgba(244,174,26,0.24),transparent_28%)]" />
+            <div className="relative w-full max-w-md">
+                <div className="rounded-lg border border-white/12 bg-white p-6 text-foreground shadow-2xl shadow-black/25 sm:p-8">
+                    <div className="flex flex-col items-center gap-5">
                         <Link
                             href={home()}
-                            className="flex flex-col items-center gap-2 font-medium"
+                            className="flex flex-col items-center gap-3 font-medium"
                         >
-                            <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 fill-current text-foreground" />
-                            </div>
+                            <img
+                                src="/images/icons/logo.png"
+                                alt="KH Equipment Hub"
+                                className="h-20 w-auto object-contain"
+                            />
                             <span className="sr-only">{title}</span>
                         </Link>
 
                         <div className="space-y-2 text-center">
-                            <h1 className="text-xl font-medium">{title}</h1>
-                            <p className="text-center text-sm text-muted-foreground">
+                            <p className="text-xs font-bold tracking-[0.22em] text-brand-gold uppercase">
+                                KH Equipment Hub
+                            </p>
+                            <h1 className="text-2xl font-bold tracking-tight text-brand-steel">
+                                {title}
+                            </h1>
+                            <p className="mx-auto max-w-xs text-center text-sm text-muted-foreground">
                                 {description}
                             </p>
                         </div>
                     </div>
-                    {children}
+                    <div className="mt-8">{children}</div>
                 </div>
             </div>
         </div>

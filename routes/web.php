@@ -21,6 +21,10 @@ Route::get('/maintenance-bypass', function (Request $request) {
 })->name('maintenance.bypass');
 
 Route::get('/', HomeController::class)->name('home');
+Route::match(['get', 'post'], '/register', fn () => abort(404));
+Route::match(['get', 'post'], '/forgot-password', fn () => abort(404));
+Route::match(['get', 'post'], '/reset-password', fn () => abort(404));
+Route::get('/reset-password/{token}', fn () => abort(404));
 Route::inertia('/about', 'about')->name('about');
 Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');

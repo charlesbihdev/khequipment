@@ -118,6 +118,10 @@ return [
         'login' => 'login',
     ],
 
+    'paths' => [
+        'login' => '/kh-private-access',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Register View Routes
@@ -143,7 +147,7 @@ return [
     */
 
     'features' => [
-        Features::resetPasswords(),
+        // Features::resetPasswords(),
     ],
 
 ];
