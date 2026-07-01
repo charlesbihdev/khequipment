@@ -12,4 +12,9 @@ return [
         'description' => env('SITE_META_DESCRIPTION', 'KH Equipment Hub supplies construction equipment, machinery, spare parts, and construction work solutions.'),
     ],
     'social_image' => env('SITE_SOCIAL_IMAGE', '/images/brand/android-chrome-512x512.png'),
+    'maintenance' => [
+        'enabled' => env('SITE_MAINTENANCE', false),
+        'secret' => env('SITE_MAINTENANCE_SECRET', '12345'),
+        'message' => env('SITE_MAINTENANCE_MESSAGE', 'We are improving the website. Please check back soon.'),
+    ],
 ];
