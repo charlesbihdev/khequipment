@@ -97,6 +97,7 @@ export function useHeadingDropdownMenu(config?: UseHeadingDropdownMenuConfig) {
 
   const { editor } = useTiptapEditor(providedEditor)
   const [isVisible, setIsVisible] = useState(true)
+  const [, setRefreshKey] = useState(0)
 
   const activeLevel = getActiveHeadingLevel(editor, levels)
   const isActive = isHeadingActive(editor)
@@ -109,14 +110,17 @@ export function useHeadingDropdownMenu(config?: UseHeadingDropdownMenuConfig) {
       setIsVisible(
         shouldShowButton({ editor, hideWhenUnavailable, level: levels })
       )
+      setRefreshKey((key) => key + 1)
     }
 
     handleSelectionUpdate()
 
     editor.on("selectionUpdate", handleSelectionUpdate)
+    editor.on("transaction", handleSelectionUpdate)
 
     return () => {
       editor.off("selectionUpdate", handleSelectionUpdate)
+      editor.off("transaction", handleSelectionUpdate)
     }
   }, [editor, hideWhenUnavailable, levels])
 

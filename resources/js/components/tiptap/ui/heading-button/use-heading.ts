@@ -85,8 +85,8 @@ export function canToggle(
 
   if (!turnInto) {
     return level
-      ? editor.can().setNode("heading", { level })
-      : editor.can().setNode("heading")
+      ? editor.can().chain().focus().setNode("heading", { level }).run()
+      : editor.can().chain().focus().setNode("heading").run()
   }
 
   // Ensure selection is in nodes we're allowed to convert
@@ -106,8 +106,10 @@ export function canToggle(
   // Either we can set heading directly on the selection,
   // or we can clear formatting/nodes to arrive at a heading.
   return level
-    ? editor.can().setNode("heading", { level }) || editor.can().clearNodes()
-    : editor.can().setNode("heading") || editor.can().clearNodes()
+    ? editor.can().chain().focus().setNode("heading", { level }).run() ||
+        editor.can().chain().focus().clearNodes().run()
+    : editor.can().chain().focus().setNode("heading").run() ||
+        editor.can().chain().focus().clearNodes().run()
 }
 
 /**
@@ -307,6 +309,7 @@ export function useHeading(config: UseHeadingConfig) {
 
   const { editor } = useTiptapEditor(providedEditor)
   const [isVisible, setIsVisible] = useState<boolean>(true)
+  const [, setRefreshKey] = useState(0)
   const canToggleState = canToggle(editor, level)
   const isActive = isHeadingActive(editor, level)
 
@@ -315,14 +318,17 @@ export function useHeading(config: UseHeadingConfig) {
 
     const handleSelectionUpdate = () => {
       setIsVisible(shouldShowButton({ editor, level, hideWhenUnavailable }))
+      setRefreshKey((key) => key + 1)
     }
 
     handleSelectionUpdate()
 
     editor.on("selectionUpdate", handleSelectionUpdate)
+    editor.on("transaction", handleSelectionUpdate)
 
     return () => {
       editor.off("selectionUpdate", handleSelectionUpdate)
+      editor.off("transaction", handleSelectionUpdate)
     }
   }, [editor, level, hideWhenUnavailable])
 

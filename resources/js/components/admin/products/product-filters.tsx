@@ -38,8 +38,8 @@ export function ProductFilters({ categories, filters }: Props) {
     }
 
     return (
-        <form onSubmit={submit} className="grid gap-3 rounded-lg border bg-card p-3 md:grid-cols-[minmax(220px,1fr)_180px_150px_auto]">
-            <div className="relative">
+        <form onSubmit={submit} className="grid gap-3 rounded-lg border bg-card p-3 md:grid-cols-2 xl:grid-cols-[minmax(260px,1fr)_minmax(180px,220px)_minmax(150px,190px)_auto]">
+            <div className="relative md:col-span-2 xl:col-span-1">
                 <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                     value={values.search}
@@ -51,7 +51,7 @@ export function ProductFilters({ categories, filters }: Props) {
             <select
                 value={values.category_id}
                 onChange={(event) => setValues((current) => ({ ...current, category_id: event.target.value }))}
-                className="h-9 rounded-md border bg-background px-3 text-sm"
+                className="h-9 min-w-0 rounded-md border bg-background px-3 text-sm"
             >
                 <option value="">All categories</option>
                 {categories.map((category) => (
@@ -61,17 +61,17 @@ export function ProductFilters({ categories, filters }: Props) {
             <select
                 value={values.condition}
                 onChange={(event) => setValues((current) => ({ ...current, condition: event.target.value }))}
-                className="h-9 rounded-md border bg-background px-3 text-sm"
+                className="h-9 min-w-0 rounded-md border bg-background px-3 text-sm"
             >
                 <option value="">Any condition</option>
                 <option value="new">New</option>
                 <option value="used">Used</option>
             </select>
-            <div className="flex gap-2">
-                <Button type="submit" className="bg-brand-gold text-brand-gold-foreground hover:bg-brand-gold/90">
+            <div className="flex gap-2 md:justify-end">
+                <Button type="submit" className="flex-1 bg-brand-gold text-brand-gold-foreground hover:bg-brand-gold/90 sm:flex-none">
                     Search
                 </Button>
-                <Button type="button" variant="outline" onClick={clear}>
+                <Button type="button" variant="outline" onClick={clear} className="flex-1 sm:flex-none">
                     Clear
                 </Button>
             </div>

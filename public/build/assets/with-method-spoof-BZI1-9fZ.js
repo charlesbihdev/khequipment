@@ -1,0 +1,1 @@
+function e(e,t){let n=t.includes(`?`)?t.split(`?`)[1]:``,r=new URLSearchParams(n).get(`_method`);return r?{...e,_method:r.toLowerCase()}:e}export{e as t};
