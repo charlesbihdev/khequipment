@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Project;
 use App\Models\Promo;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -53,6 +54,57 @@ class DatabaseSeeder extends Seeder
                 'starts_at' => now()->startOfDay(),
                 'ends_at' => null,
                 'is_active' => true,
+            ],
+        ));
+
+        collect([
+            [
+                'title' => 'Motor Grader Supplied for Road Works',
+                'slug' => 'motor-grader-supplied-for-road-works',
+                'category' => 'project',
+                'deliverable' => 'Motor grader supply',
+                'client_name' => 'Road construction contractor',
+                'location' => 'Ghana',
+                'summary' => 'A site-ready motor grader supplied to support road preparation and grading operations.',
+                'content' => '<p>KH Equipment Hub supplied a motor grader for road preparation work, supporting the client with equipment guidance and delivery coordination.</p>',
+                'status' => 'delivered',
+                'cover_media_path' => 'products/4180D_motor_grader.jpg',
+                'sort_order' => 1,
+            ],
+            [
+                'title' => 'Compaction Equipment for Site Preparation',
+                'slug' => 'compaction-equipment-for-site-preparation',
+                'category' => 'service-delivered',
+                'deliverable' => 'Compaction equipment support',
+                'client_name' => 'Building contractor',
+                'location' => 'Accra and beyond',
+                'summary' => 'Single drum roller support delivered for soil compaction and site preparation work.',
+                'content' => '<p>The team supported a contractor with compaction equipment for site preparation and active construction work.</p>',
+                'status' => 'delivered',
+                'cover_media_path' => 'products/6114E_single_drum_roller.jpg',
+                'sort_order' => 2,
+            ],
+            [
+                'title' => 'Excavator Procurement for Earthworks',
+                'slug' => 'excavator-procurement-for-earthworks',
+                'category' => 'contract',
+                'deliverable' => 'Excavator procurement',
+                'client_name' => 'Corporate procurement client',
+                'location' => 'Ghana',
+                'summary' => 'Excavator sourcing and delivery support handled for earthmoving and site development work.',
+                'content' => '<p>KH Equipment Hub handled sourcing support for an excavator procurement request tied to earthmoving operations.</p>',
+                'status' => 'delivered',
+                'cover_media_path' => 'products/920E_excavator_112kw_1m3_600mm.jpg',
+                'sort_order' => 3,
+            ],
+        ])->each(fn (array $project): Project => Project::updateOrCreate(
+            ['slug' => $project['slug']],
+            [
+                ...$project,
+                'cover_media_type' => 'image',
+                'is_featured' => true,
+                'is_published' => true,
+                'published_at' => now(),
             ],
         ));
     }

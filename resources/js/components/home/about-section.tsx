@@ -7,7 +7,7 @@ const strengths = [
 
 export function AboutSection() {
     return (
-        <section id="about" className="bg-background py-20 sm:py-28">
+        <section id="about" className="bg-background pt-10 pb-16 sm:pt-12 sm:pb-20">
             <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:px-8">
                 <div>
                     <p className="text-5xl leading-tight font-extrabold text-foreground sm:text-6xl">

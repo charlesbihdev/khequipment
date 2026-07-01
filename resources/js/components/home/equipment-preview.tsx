@@ -27,7 +27,7 @@ export function EquipmentPreview() {
     return (
         <section
             id="equipment"
-            className="bg-primary py-20 text-primary-foreground sm:py-28"
+            className="bg-primary py-16 text-primary-foreground sm:py-20"
         >
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
