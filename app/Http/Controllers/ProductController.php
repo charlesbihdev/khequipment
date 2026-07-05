@@ -31,6 +31,8 @@ class ProductController extends Controller
 
         $products = Product::query()
             ->with(['category:id,name,slug', 'images:id,product_id,filename'])
+            ->where('is_active', true)
+            ->whereHas('category', fn ($query) => $query->where('is_active', true))
             ->when(
                 $categorySlugs->isNotEmpty(),
                 fn ($query) => $query->whereHas(
@@ -63,6 +65,7 @@ class ProductController extends Controller
 
         return Inertia::render('products', [
             'categories' => Category::query()
+                ->where('is_active', true)
                 ->orderBy('name')
                 ->get(['id', 'name', 'slug']),
             'brands' => Inertia::defer(fn () => $this->brands()),
@@ -76,6 +79,8 @@ class ProductController extends Controller
 
     public function show(Request $request, Product $product): Response
     {
+        abort_unless($product->is_active && $product->category()->where('is_active', true)->exists(), 404);
+
         $product->load(['category:id,name,slug', 'images:id,product_id,filename']);
         $returnTo = $request->query('returnTo');
         $returnTo = is_string($returnTo) && str_starts_with($returnTo, '/products')
@@ -111,6 +116,8 @@ class ProductController extends Controller
     private function brands()
     {
         return Product::query()
+            ->where('is_active', true)
+            ->whereHas('category', fn ($query) => $query->where('is_active', true))
             ->whereNotNull('brand')
             ->where('brand', '<>', '')
             ->orderBy('brand')

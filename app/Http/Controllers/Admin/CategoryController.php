@@ -40,7 +40,7 @@ class CategoryController extends Controller
     public function edit(Category $category): Response
     {
         return Inertia::render('admin/categories/edit', [
-            'category' => $category->only(['id', 'name', 'slug']),
+            'category' => $category->only(['id', 'name', 'slug', 'is_active']),
         ]);
     }
 
@@ -73,9 +73,11 @@ class CategoryController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:categories,slug,'.($category?->id ?? 'NULL')],
+            'is_active' => ['boolean'],
         ]);
 
         $data['slug'] = Str::slug($data['slug'] ?: $data['name']);
+        $data['is_active'] = $request->boolean('is_active');
         $exists = Category::query()
             ->where('slug', $data['slug'])
             ->when($category, fn ($query) => $query->whereKeyNot($category->id))

@@ -12,9 +12,14 @@ type CategoryRow = {
     name: string;
     slug: string;
     products_count: number;
+    is_active: boolean;
 };
 
-export default function CategoriesIndex({ categories }: { categories: Paginator<CategoryRow> }) {
+export default function CategoriesIndex({
+    categories,
+}: {
+    categories: Paginator<CategoryRow>;
+}) {
     return (
         <>
             <Head title="Categories" />
@@ -22,7 +27,10 @@ export default function CategoriesIndex({ categories }: { categories: Paginator<
                 <AdminPageHeader
                     title="Categories"
                     description="Group products into clear equipment ranges."
-                    action={{ label: 'Add category', href: categoriesRoute.create() }}
+                    action={{
+                        label: 'Add category',
+                        href: categoriesRoute.create(),
+                    }}
                 />
                 <AdminTable>
                     <thead className="bg-muted/50 text-left">
@@ -30,23 +38,50 @@ export default function CategoriesIndex({ categories }: { categories: Paginator<
                             <th className="px-4 py-3">Name</th>
                             <th className="px-4 py-3">Slug</th>
                             <th className="px-4 py-3">Products</th>
+                            <th className="px-4 py-3">Status</th>
                             <th className="px-4 py-3 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y">
-                        {categories.data.length === 0 && <EmptyTableRow colSpan={4} label="No categories yet." />}
+                        {categories.data.length === 0 && (
+                            <EmptyTableRow
+                                colSpan={5}
+                                label="No categories yet."
+                            />
+                        )}
                         {categories.data.map((category) => (
                             <tr key={category.id}>
-                                <td className="px-4 py-3 font-semibold">{category.name}</td>
-                                <td className="px-4 py-3 text-muted-foreground">{category.slug}</td>
-                                <td className="px-4 py-3">{category.products_count}</td>
+                                <td className="px-4 py-3 font-semibold">
+                                    {category.name}
+                                </td>
+                                <td className="px-4 py-3 text-muted-foreground">
+                                    {category.slug}
+                                </td>
+                                <td className="px-4 py-3">
+                                    {category.products_count}
+                                </td>
+                                <td className="px-4 py-3">
+                                    <StatusBadge active={category.is_active} />
+                                </td>
                                 <td className="px-4 py-3">
                                     <div className="flex justify-end gap-2">
-                                        <Button asChild size="sm" variant="outline">
-                                            <Link href={categoriesRoute.edit(category.id)}>Edit</Link>
+                                        <Button
+                                            asChild
+                                            size="sm"
+                                            variant="outline"
+                                        >
+                                            <Link
+                                                href={categoriesRoute.edit(
+                                                    category.id,
+                                                )}
+                                            >
+                                                Edit
+                                            </Link>
                                         </Button>
                                         <ConfirmDeleteButton
-                                            form={categoriesRoute.destroy.form(category.id)}
+                                            form={categoriesRoute.destroy.form(
+                                                category.id,
+                                            )}
                                             title="Delete category?"
                                             description="Products in this category will block deletion until they are moved."
                                         />
@@ -59,5 +94,18 @@ export default function CategoriesIndex({ categories }: { categories: Paginator<
                 <AdminPagination links={categories.links} />
             </div>
         </>
+    );
+}
+function StatusBadge({ active }: { active: boolean }) {
+    return (
+        <span
+            className={
+                active
+                    ? 'rounded-md bg-success px-2 py-1 text-xs font-semibold text-success-foreground'
+                    : 'rounded-md bg-muted px-2 py-1 text-xs font-semibold text-muted-foreground'
+            }
+        >
+            {active ? 'Active' : 'Hidden'}
+        </span>
     );
 }
