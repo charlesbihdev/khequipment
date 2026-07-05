@@ -47,6 +47,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('categories', AdminCategoryController::class)->except('show');
+        Route::patch('products/order', [AdminProductController::class, 'order'])->name('products.order');
         Route::resource('products', AdminProductController::class)->except('show');
         Route::resource('projects', AdminProjectController::class)->except('show');
         Route::resource('promos', AdminPromoController::class)->except('show');
@@ -55,3 +56,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__.'/settings.php';
+

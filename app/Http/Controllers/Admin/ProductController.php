@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -40,8 +41,7 @@ class ProductController extends Controller
                 ->when($filters['category_id'] ?? null, fn ($query, int $categoryId) => $query->where('category_id', $categoryId))
                 ->when($filters['condition'] ?? null, fn ($query, string $condition) => $query->where('is_new', $condition === 'new'))
                 ->when($filters['status'] ?? null, fn ($query, string $status) => $query->where('is_active', $status === 'active'))
-                ->latest()
-                ->orderByDesc('id')
+                ->ordered()
                 ->paginate(30)
                 ->withQueryString()
                 ->through(fn (Product $product): array => $this->summary($product)),
@@ -113,6 +113,26 @@ class ProductController extends Controller
         return redirect($this->returnToProductsIndex($request));
     }
 
+    public function order(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'products' => ['required', 'array'],
+            'products.*.id' => ['required', 'integer', 'exists:products,id'],
+            'products.*.sort_order' => ['required', 'integer', 'min:1'],
+        ]);
+
+        DB::transaction(function () use ($data): void {
+            foreach ($data['products'] as $product) {
+                Product::query()
+                    ->whereKey($product['id'])
+                    ->update(['sort_order' => $product['sort_order']]);
+            }
+        });
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Product order updated.']);
+
+        return back();
+    }
     public function destroy(Product $product): RedirectResponse
     {
         $product->delete();
@@ -202,3 +222,7 @@ class ProductController extends Controller
         ];
     }
 }
+
+
+
+
