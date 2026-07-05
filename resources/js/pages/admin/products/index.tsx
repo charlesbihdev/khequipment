@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { AdminPageHeader } from '@/components/admin/admin-page-header';
 import { AdminPagination } from '@/components/admin/admin-pagination';
 import { AdminTable, EmptyTableRow } from '@/components/admin/admin-table';
@@ -43,6 +43,8 @@ export default function ProductsIndex({
         status: string;
     };
 }) {
+    const { url } = usePage();
+
     return (
         <>
             <Head title="Products" />
@@ -113,6 +115,11 @@ export default function ProductsIndex({
                                             <Link
                                                 href={productsRoute.edit(
                                                     product.id,
+                                                    {
+                                                        query: {
+                                                            returnTo: url,
+                                                        },
+                                                    },
                                                 )}
                                             >
                                                 Edit

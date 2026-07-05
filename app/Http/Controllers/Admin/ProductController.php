@@ -72,7 +72,7 @@ class ProductController extends Controller
         return to_route('admin.products.index');
     }
 
-    public function edit(Product $product): Response
+    public function edit(Request $request, Product $product): Response
     {
         $product->load(['images:id,product_id,filename']);
 
@@ -98,6 +98,7 @@ class ProductController extends Controller
                 ]),
             ],
             'categories' => $this->categories(),
+            'returnTo' => $this->returnToProductsIndex($request),
         ]);
     }
 
@@ -109,7 +110,7 @@ class ProductController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Product updated.']);
 
-        return to_route('admin.products.index');
+        return redirect($this->returnToProductsIndex($request));
     }
 
     public function destroy(Product $product): RedirectResponse
@@ -119,6 +120,15 @@ class ProductController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Product deleted.']);
 
         return back();
+    }
+
+    private function returnToProductsIndex(Request $request): string
+    {
+        $returnTo = $request->query('returnTo');
+
+        return is_string($returnTo) && str_starts_with($returnTo, '/admin/products')
+            ? $returnTo
+            : route('admin.products.index', absolute: false);
     }
 
     private function validated(Request $request, ?Product $product = null): array
