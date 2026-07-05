@@ -1,4 +1,6 @@
-import { Form } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -25,8 +27,20 @@ export function ConfirmDeleteButton({
     title = 'Delete this item?',
     description = 'This action cannot be undone.',
 }: Props) {
+    const [open, setOpen] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+
+    function confirmDelete() {
+        router.visit(form.action, {
+            method: form.method,
+            onStart: () => setDeleting(true),
+            onSuccess: () => setOpen(false),
+            onFinish: () => setDeleting(false),
+        });
+    }
+
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button size="sm" variant="destructive" type="button">
                     {label}
@@ -39,15 +53,23 @@ export function ConfirmDeleteButton({
                 </DialogHeader>
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button type="button" variant="outline">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            disabled={deleting}
+                        >
                             Cancel
                         </Button>
                     </DialogClose>
-                    <Form {...form}>
-                        <Button type="submit" variant="destructive">
-                            {label}
-                        </Button>
-                    </Form>
+                    <Button
+                        type="button"
+                        variant="destructive"
+                        disabled={deleting}
+                        onClick={confirmDelete}
+                    >
+                        {deleting && <LoaderCircle className="animate-spin" />}
+                        {label}
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

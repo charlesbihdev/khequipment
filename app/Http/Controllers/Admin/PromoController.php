@@ -43,6 +43,8 @@ class PromoController extends Controller
     {
         Promo::create($this->validated($request));
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Promo created.']);
+
         return to_route('admin.promos.index');
     }
 
@@ -75,12 +77,16 @@ class PromoController extends Controller
     {
         $promo->update($this->validated($request, $promo));
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Promo updated.']);
+
         return to_route('admin.promos.index');
     }
 
     public function destroy(Promo $promo): RedirectResponse
     {
         $promo->delete();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Promo deleted.']);
 
         return to_route('admin.promos.index');
     }

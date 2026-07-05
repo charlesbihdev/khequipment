@@ -41,6 +41,8 @@ class ProjectController extends Controller
     {
         Project::create($this->validated($request));
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Project created.']);
+
         return to_route('admin.projects.index');
     }
 
@@ -55,12 +57,16 @@ class ProjectController extends Controller
     {
         $project->update($this->validated($request, $project));
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Project updated.']);
+
         return to_route('admin.projects.index');
     }
 
     public function destroy(Project $project): RedirectResponse
     {
         $project->delete();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Project deleted.']);
 
         return to_route('admin.projects.index');
     }
