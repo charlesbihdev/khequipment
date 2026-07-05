@@ -7,6 +7,7 @@ type Category = {
     id: number;
     name: string;
     slug: string;
+    is_active: boolean;
 };
 
 export default function EditCategory({ category }: { category: Category }) {

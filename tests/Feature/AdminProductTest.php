@@ -30,7 +30,7 @@ it('shows a success toast after creating a product', function () {
     $this->assertDatabaseHas('products', ['slug' => 'concrete-mixer']);
 });
 
-it('shows a success toast after updating a product', function () {
+it('shows a success toast after updating a product from the edit form payload', function () {
     $user = User::factory()->create();
     $category = Category::create([
         'name' => 'Mixers',
@@ -40,16 +40,19 @@ it('shows a success toast after updating a product', function () {
         'category_id' => $category->id,
         'name' => 'Concrete Mixer',
         'slug' => 'concrete-mixer',
-        'is_new' => true,
+        'is_new' => false,
+        'is_active' => false,
     ]);
 
     $response = $this
         ->actingAs($user)
-        ->put(route('admin.products.update', $product), [
+        ->post(route('admin.products.update', $product), [
+            '_method' => 'put',
             'category_id' => $category->id,
             'name' => 'Updated Mixer',
             'slug' => 'updated-mixer',
-            'is_new' => false,
+            'is_new' => '1',
+            'is_active' => '1',
         ]);
 
     $response
@@ -62,7 +65,8 @@ it('shows a success toast after updating a product', function () {
     $this->assertDatabaseHas('products', [
         'id' => $product->id,
         'slug' => 'updated-mixer',
-        'is_new' => false,
+        'is_new' => true,
+        'is_active' => true,
     ]);
 });
 

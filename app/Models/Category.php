@@ -11,14 +11,26 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $name
  * @property string $slug
+ * @property bool $is_active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'slug'])]
+#[Fillable(['name', 'slug', 'is_active'])]
 class Category extends Model
 {
+    protected $attributes = [
+        'is_active' => true,
+    ];
+
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
     }
 }

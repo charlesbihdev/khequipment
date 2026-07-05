@@ -3,6 +3,7 @@ import InputError from '@/components/input-error';
 import { AdminFormShell } from '@/components/admin/admin-form-shell';
 import { RequiredLabel } from '@/components/admin/required-label';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { withMethodSpoof } from '@/components/admin/with-method-spoof';
@@ -13,6 +14,7 @@ type Category = {
     id: number;
     name: string;
     slug: string;
+    is_active: boolean;
 };
 
 type Props = {
@@ -51,8 +53,21 @@ export function CategoryForm({ action, category }: Props) {
                         <InputError message={errors.slug} />
                     </div>
 
+                    <div className="flex items-center gap-3">
+                        <Checkbox
+                            id="is_active"
+                            name="is_active"
+                            value="1"
+                            defaultChecked={category?.is_active ?? true}
+                        />
+                        <Label htmlFor="is_active">Active on public site</Label>
+                    </div>
+
                     <div className="flex gap-3">
-                        <Button disabled={processing} className="bg-brand-gold text-brand-gold-foreground hover:bg-brand-gold/90">
+                        <Button
+                            disabled={processing}
+                            className="bg-brand-gold text-brand-gold-foreground hover:bg-brand-gold/90"
+                        >
                             Save category
                         </Button>
                         <Button asChild variant="outline">

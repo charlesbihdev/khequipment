@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
  * @property string $slug
  * @property string|null $brand
  * @property bool $is_new
+ * @property bool $is_active
  * @property string|null $powered_by
  * @property string|null $drum_capacity
  * @property string|null $operating_weight
@@ -28,6 +29,7 @@ use Illuminate\Support\Carbon;
     'slug',
     'brand',
     'is_new',
+    'is_active',
     'powered_by',
     'drum_capacity',
     'operating_weight',
@@ -37,6 +39,7 @@ class Product extends Model
 {
     protected $attributes = [
         'is_new' => true,
+        'is_active' => true,
     ];
 
     public function category(): BelongsTo
@@ -58,6 +61,7 @@ class Product extends Model
     {
         return [
             'is_new' => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 }

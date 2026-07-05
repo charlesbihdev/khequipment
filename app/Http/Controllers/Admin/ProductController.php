@@ -21,6 +21,7 @@ class ProductController extends Controller
             'search' => ['nullable', 'string', 'max:100'],
             'category_id' => ['nullable', 'integer', 'exists:categories,id'],
             'condition' => ['nullable', 'in:new,used'],
+            'status' => ['nullable', 'in:active,hidden'],
         ]);
 
         return Inertia::render('admin/products/index', [
@@ -38,6 +39,7 @@ class ProductController extends Controller
                 })
                 ->when($filters['category_id'] ?? null, fn ($query, int $categoryId) => $query->where('category_id', $categoryId))
                 ->when($filters['condition'] ?? null, fn ($query, string $condition) => $query->where('is_new', $condition === 'new'))
+                ->when($filters['status'] ?? null, fn ($query, string $status) => $query->where('is_active', $status === 'active'))
                 ->latest()
                 ->orderByDesc('id')
                 ->paginate(30)
@@ -48,6 +50,7 @@ class ProductController extends Controller
                 'search' => $filters['search'] ?? '',
                 'category_id' => $filters['category_id'] ?? '',
                 'condition' => $filters['condition'] ?? '',
+                'status' => $filters['status'] ?? '',
             ],
         ]);
     }
@@ -82,6 +85,7 @@ class ProductController extends Controller
                     'slug',
                     'brand',
                     'is_new',
+                    'is_active',
                     'powered_by',
                     'drum_capacity',
                     'operating_weight',
@@ -125,6 +129,7 @@ class ProductController extends Controller
             'slug' => ['nullable', 'string', 'max:255', 'unique:products,slug,'.($product?->id ?? 'NULL')],
             'brand' => ['nullable', 'string', 'max:120'],
             'is_new' => ['boolean'],
+            'is_active' => ['boolean'],
             'powered_by' => ['nullable', 'string', 'max:200'],
             'drum_capacity' => ['nullable', 'string', 'max:50'],
             'operating_weight' => ['nullable', 'string', 'max:50'],
@@ -136,6 +141,7 @@ class ProductController extends Controller
 
         $data['slug'] = Str::slug($data['slug'] ?: $data['name']);
         $data['is_new'] = $request->boolean('is_new');
+        $data['is_active'] = $request->boolean('is_active');
         $exists = Product::query()
             ->where('slug', $data['slug'])
             ->when($product, fn ($query) => $query->whereKeyNot($product->id))
@@ -177,6 +183,7 @@ class ProductController extends Controller
             'category' => $product->category?->name,
             'brand' => $product->brand,
             'isNew' => $product->is_new,
+            'isActive' => $product->is_active,
             'poweredBy' => $product->powered_by,
             'drumCapacity' => $product->drum_capacity,
             'operatingWeight' => $product->operating_weight,
