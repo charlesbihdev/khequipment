@@ -52,6 +52,8 @@ class QuoteController extends Controller
     {
         $quote->delete();
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Quote deleted.']);
+
         return to_route('admin.quotes.index');
     }
 }

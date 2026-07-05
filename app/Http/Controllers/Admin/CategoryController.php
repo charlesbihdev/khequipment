@@ -32,6 +32,8 @@ class CategoryController extends Controller
     {
         Category::create($this->validated($request));
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Category created.']);
+
         return to_route('admin.categories.index');
     }
 
@@ -46,16 +48,22 @@ class CategoryController extends Controller
     {
         $category->update($this->validated($request, $category));
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Category updated.']);
+
         return to_route('admin.categories.index');
     }
 
     public function destroy(Category $category): RedirectResponse
     {
         if ($category->products()->exists()) {
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Move products out of this category before deleting it.']);
+
             return back()->withErrors(['category' => 'Move products out of this category before deleting it.']);
         }
 
         $category->delete();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Category deleted.']);
 
         return to_route('admin.categories.index');
     }

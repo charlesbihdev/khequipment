@@ -64,6 +64,8 @@ class ProductController extends Controller
         $product = Product::create($this->validated($request));
         $this->storeImages($request, $product);
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Product created.']);
+
         return to_route('admin.products.index');
     }
 
@@ -101,6 +103,8 @@ class ProductController extends Controller
         $product->images()->whereIn('id', $request->input('remove_image_ids', []))->delete();
         $this->storeImages($request, $product);
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Product updated.']);
+
         return to_route('admin.products.index');
     }
 
@@ -108,7 +112,9 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        return to_route('admin.products.index');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Product deleted.']);
+
+        return back();
     }
 
     private function validated(Request $request, ?Product $product = null): array
