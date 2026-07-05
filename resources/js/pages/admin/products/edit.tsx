@@ -6,13 +6,28 @@ import type { SelectOption } from '@/types';
 
 type Product = Parameters<typeof ProductForm>[0]['product'];
 
-export default function EditProduct({ product, categories }: { product: Product; categories: SelectOption[] }) {
+export default function EditProduct({
+    product,
+    categories,
+    returnTo,
+}: {
+    product: Product;
+    categories: SelectOption[];
+    returnTo: string;
+}) {
     return (
         <>
             <Head title={`Edit ${product?.name ?? 'product'}`} />
             <div className="space-y-6 p-4 md:p-6">
                 <AdminPageHeader title="Edit product" />
-                <ProductForm action={products.update.form(product?.id ?? 0)} product={product} categories={categories} />
+                <ProductForm
+                    action={products.update.form(product?.id ?? 0, {
+                        query: { returnTo },
+                    })}
+                    product={product}
+                    categories={categories}
+                    cancelHref={returnTo}
+                />
             </div>
         </>
     );

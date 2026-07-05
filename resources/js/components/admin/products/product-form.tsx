@@ -31,9 +31,15 @@ type Props = {
     action: RouteFormDefinition<'post'>;
     categories: SelectOption[];
     product?: Product;
+    cancelHref?: string;
 };
 
-export function ProductForm({ action, categories, product }: Props) {
+export function ProductForm({
+    action,
+    categories,
+    product,
+    cancelHref,
+}: Props) {
     return (
         <Form
             {...action}
@@ -190,7 +196,9 @@ export function ProductForm({ action, categories, product }: Props) {
                             Save product
                         </Button>
                         <Button asChild variant="outline">
-                            <Link href={products.index()}>Cancel</Link>
+                            <Link href={cancelHref ?? products.index()}>
+                                Cancel
+                            </Link>
                         </Button>
                     </div>
                 </AdminFormShell>

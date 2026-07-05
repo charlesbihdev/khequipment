@@ -44,7 +44,7 @@ class ProductController extends Controller
                 $selectedBrands->isNotEmpty(),
                 fn ($query) => $query->whereIn('brand', $selectedBrands)
             )
-            ->orderBy('name')
+            ->ordered()
             ->paginate(9)
             ->withQueryString()
             ->through(function (Product $product): array {
@@ -130,3 +130,4 @@ class ProductController extends Controller
             ->values();
     }
 }
+

@@ -1,4 +1,6 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { GripVertical } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { AdminPageHeader } from '@/components/admin/admin-page-header';
 import { AdminPagination } from '@/components/admin/admin-pagination';
 import { AdminTable, EmptyTableRow } from '@/components/admin/admin-table';
@@ -22,6 +24,7 @@ type ProductRow = {
     brand: string | null;
     isNew: boolean;
     isActive: boolean;
+    sortOrder: number;
     poweredBy: string | null;
     drumCapacity: string | null;
     operatingWeight: string | null;
@@ -43,6 +46,54 @@ export default function ProductsIndex({
         status: string;
     };
 }) {
+    const { url } = usePage();
+    const [rows, setRows] = useState(products.data);
+    const [draggedId, setDraggedId] = useState<number | null>(null);
+    const [dragOverId, setDragOverId] = useState<number | null>(null);
+
+    useEffect(() => {
+        setRows(products.data);
+    }, [products.data]);
+
+    function moveProduct(targetId: number) {
+        if (draggedId === null || draggedId === targetId) {
+            setDraggedId(null);
+            setDragOverId(null);
+            return;
+        }
+
+        const fromIndex = rows.findIndex((product) => product.id === draggedId);
+        const toIndex = rows.findIndex((product) => product.id === targetId);
+
+        if (fromIndex === -1 || toIndex === -1) {
+            setDraggedId(null);
+            setDragOverId(null);
+            return;
+        }
+
+        const nextRows = [...rows];
+        const [movedProduct] = nextRows.splice(fromIndex, 1);
+        nextRows.splice(toIndex, 0, movedProduct);
+        setRows(nextRows);
+        setDraggedId(null);
+        setDragOverId(null);
+
+        const basePosition = products.from ?? 1;
+
+        router.patch(
+            '/admin/products/order',
+            {
+                products: nextRows.map((product, index) => ({
+                    id: product.id,
+                    sort_order: basePosition + index,
+                })),
+            },
+            {
+                preserveScroll: true,
+            },
+        );
+    }
+
     return (
         <>
             <Head title="Products" />
@@ -59,6 +110,7 @@ export default function ProductsIndex({
                 <AdminTable>
                     <thead className="bg-muted/50 text-left">
                         <tr>
+                            <th className="w-12 px-4 py-3">Order</th>
                             <th className="px-4 py-3">Product</th>
                             <th className="px-4 py-3">Category</th>
                             <th className="px-4 py-3">Brand</th>
@@ -70,12 +122,44 @@ export default function ProductsIndex({
                     <tbody className="divide-y">
                         {products.data.length === 0 && (
                             <EmptyTableRow
-                                colSpan={6}
+                                colSpan={7}
                                 label="No products yet."
                             />
                         )}
-                        {products.data.map((product) => (
-                            <tr key={product.id}>
+                        {rows.map((product) => (
+                            <tr
+                                key={product.id}
+                                className={
+                                    dragOverId === product.id
+                                        ? 'bg-muted/40'
+                                        : undefined
+                                }
+                                onDragOver={(event) => {
+                                    event.preventDefault();
+                                    setDragOverId(product.id);
+                                }}
+                                onDragLeave={() => setDragOverId(null)}
+                                onDrop={() => moveProduct(product.id)}
+                            >
+                                <td className="px-4 py-3">
+                                    <button
+                                        type="button"
+                                        draggable
+                                        aria-label={`Drag ${product.name}`}
+                                        aria-grabbed={draggedId === product.id}
+                                        title="Drag to reorder"
+                                        className="inline-flex size-8 cursor-grab items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground active:cursor-grabbing"
+                                        onDragStart={() =>
+                                            setDraggedId(product.id)
+                                        }
+                                        onDragEnd={() => {
+                                            setDraggedId(null);
+                                            setDragOverId(null);
+                                        }}
+                                    >
+                                        <GripVertical className="size-4" />
+                                    </button>
+                                </td>
                                 <td className="px-4 py-3">
                                     <div className="flex items-center gap-3">
                                         <div className="h-14 w-20 rounded-md border bg-white p-1">
@@ -113,6 +197,11 @@ export default function ProductsIndex({
                                             <Link
                                                 href={productsRoute.edit(
                                                     product.id,
+                                                    {
+                                                        query: {
+                                                            returnTo: url,
+                                                        },
+                                                    },
                                                 )}
                                             >
                                                 Edit

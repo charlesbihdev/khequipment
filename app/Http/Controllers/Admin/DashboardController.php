@@ -36,10 +36,11 @@ class DashboardController extends Controller
                     'createdAt' => $quote->created_at?->diffForHumans(),
                 ]),
             'recentContent' => [
-                'products' => Product::query()->latest()->limit(4)->get(['id', 'name', 'slug', 'created_at']),
+                'products' => Product::query()->ordered()->limit(4)->get(['id', 'name', 'slug', 'created_at']),
                 'projects' => Project::query()->latest()->limit(4)->get(['id', 'title', 'slug', 'is_published']),
                 'promos' => Promo::query()->latest()->limit(4)->get(['id', 'title', 'is_active']),
             ],
         ]);
     }
 }
+

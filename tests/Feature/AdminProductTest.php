@@ -43,10 +43,17 @@ it('shows a success toast after updating a product from the edit form payload', 
         'is_new' => false,
         'is_active' => false,
     ]);
+    $returnTo = route('admin.products.index', [
+        'category_id' => $category->id,
+        'status' => 'hidden',
+    ], false);
 
     $response = $this
         ->actingAs($user)
-        ->post(route('admin.products.update', $product), [
+        ->post(route('admin.products.update', [
+            'product' => $product,
+            'returnTo' => $returnTo,
+        ]), [
             '_method' => 'put',
             'category_id' => $category->id,
             'name' => 'Updated Mixer',
@@ -56,7 +63,10 @@ it('shows a success toast after updating a product from the edit form payload', 
         ]);
 
     $response
-        ->assertRedirect(route('admin.products.index'))
+        ->assertRedirect(route('admin.products.index', [
+            'category_id' => $category->id,
+            'status' => 'hidden',
+        ]))
         ->assertInertiaFlash('toast', [
             'type' => 'success',
             'message' => 'Product updated.',
