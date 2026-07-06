@@ -61,3 +61,39 @@ it('returns not found for inactive public products', function () {
 
     $this->get(route('products.show', $product->slug))->assertNotFound();
 });
+it('shows newest products first until a manual order is set', function () {
+    $category = Category::create([
+        'name' => 'Mixers',
+        'slug' => 'mixers',
+        'is_active' => true,
+    ]);
+    $older = Product::create([
+        'category_id' => $category->id,
+        'name' => 'Older Mixer',
+        'slug' => 'older-mixer',
+        'is_active' => true,
+    ]);
+    $newer = Product::create([
+        'category_id' => $category->id,
+        'name' => 'Newer Mixer',
+        'slug' => 'newer-mixer',
+        'is_active' => true,
+    ]);
+
+    $this->get(route('products'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('products.data.0.slug', 'newer-mixer')
+            ->where('products.data.1.slug', 'older-mixer'),
+        );
+
+    $older->update(['sort_order' => 1]);
+    $newer->update(['sort_order' => 2]);
+
+    $this->get(route('products'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('products.data.0.slug', 'older-mixer')
+            ->where('products.data.1.slug', 'newer-mixer'),
+        );
+});

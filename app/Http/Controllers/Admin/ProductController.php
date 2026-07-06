@@ -105,7 +105,7 @@ class ProductController extends Controller
     public function update(Request $request, Product $product): RedirectResponse
     {
         $product->update($this->validated($request, $product));
-        $product->images()->whereIn('id', $request->input('remove_image_ids', []))->delete();
+        $this->deleteImages($product->images()->whereIn('id', $request->input('remove_image_ids', []))->get());
         $this->storeImages($request, $product);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Product updated.']);
@@ -133,8 +133,11 @@ class ProductController extends Controller
 
         return back();
     }
+
     public function destroy(Product $product): RedirectResponse
     {
+        $product->load('images');
+        $this->deleteImages($product->images);
         $product->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Product deleted.']);
@@ -184,6 +187,14 @@ class ProductController extends Controller
         return collect($data)->except(['images', 'remove_image_ids'])->all();
     }
 
+    private function deleteImages(iterable $images): void
+    {
+        foreach ($images as $image) {
+            Storage::disk('public')->delete('products/'.$image->filename);
+            $image->delete();
+        }
+    }
+
     private function storeImages(Request $request, Product $product): void
     {
         foreach ($request->file('images', []) as $image) {
@@ -214,6 +225,7 @@ class ProductController extends Controller
             'brand' => $product->brand,
             'isNew' => $product->is_new,
             'isActive' => $product->is_active,
+            'sortOrder' => $product->sort_order,
             'poweredBy' => $product->powered_by,
             'drumCapacity' => $product->drum_capacity,
             'operatingWeight' => $product->operating_weight,
@@ -222,7 +234,3 @@ class ProductController extends Controller
         ];
     }
 }
-
-
-
-
