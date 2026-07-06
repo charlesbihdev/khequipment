@@ -231,6 +231,10 @@ class ProductController extends Controller
             'operatingWeight' => $product->operating_weight,
             'description' => $product->description,
             'imageUrl' => $image ? Storage::url('products/'.$image->filename) : null,
+            'images' => $product->images->map(fn ($image): array => [
+                'id' => $image->id,
+                'url' => Storage::url('products/'.$image->filename),
+            ])->values(),
         ];
     }
 }

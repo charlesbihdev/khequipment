@@ -3,6 +3,7 @@
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 it('shows a success toast after creating a product', function () {
@@ -171,4 +172,42 @@ it('deletes product image files when deleting a product', function () {
 
     Storage::disk('public')->assertMissing('products/mixer.jpg');
     $this->assertDatabaseMissing('product_images', ['filename' => 'mixer.jpg']);
+});
+it('keeps existing product images when uploading more images during edit', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create();
+    $category = Category::create([
+        'name' => 'Mixers',
+        'slug' => 'mixers',
+    ]);
+    $product = Product::create([
+        'category_id' => $category->id,
+        'name' => 'Concrete Mixer',
+        'slug' => 'concrete-mixer',
+        'is_new' => true,
+        'is_active' => true,
+    ]);
+    $product->images()->create(['filename' => 'existing.jpg']);
+    Storage::disk('public')->put('products/existing.jpg', 'existing-image');
+
+    $this
+        ->actingAs($user)
+        ->post(route('admin.products.update', $product), [
+            '_method' => 'put',
+            'category_id' => $category->id,
+            'name' => 'Concrete Mixer',
+            'slug' => 'concrete-mixer',
+            'is_new' => '1',
+            'is_active' => '1',
+            'images' => [UploadedFile::fake()->image('new-image.jpg')],
+        ])
+        ->assertRedirect();
+
+    Storage::disk('public')->assertExists('products/existing.jpg');
+    expect($product->fresh()->images)->toHaveCount(2);
+    $this->assertDatabaseHas('product_images', [
+        'product_id' => $product->id,
+        'filename' => 'existing.jpg',
+    ]);
 });

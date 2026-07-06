@@ -30,6 +30,7 @@ type ProductRow = {
     operatingWeight: string | null;
     description: string | null;
     imageUrl: string | null;
+    images: { id: number; url: string }[];
 };
 
 export default function ProductsIndex({
@@ -238,19 +239,7 @@ function ProductViewModal({ product }: { product: ProductRow }) {
                     <DialogTitle>{product.name}</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-5 md:grid-cols-[220px_1fr]">
-                    <div className="rounded-md border bg-white p-3">
-                        {product.imageUrl ? (
-                            <img
-                                src={product.imageUrl}
-                                alt=""
-                                className="h-44 w-full object-contain"
-                            />
-                        ) : (
-                            <div className="flex h-44 items-center justify-center text-sm text-muted-foreground">
-                                No image
-                            </div>
-                        )}
-                    </div>
+                    <ProductModalGallery product={product} />
                     <div className="grid gap-3 text-sm">
                         <Detail label="Category" value={product.category} />
                         <Detail
@@ -279,6 +268,51 @@ function ProductViewModal({ product }: { product: ProductRow }) {
     );
 }
 
+function ProductModalGallery({ product }: { product: ProductRow }) {
+    const [selectedImage, setSelectedImage] = useState(
+        product.images[0]?.url ?? product.imageUrl,
+    );
+
+    return (
+        <div className="grid gap-3">
+            <div className="rounded-md border bg-white p-3">
+                {selectedImage ? (
+                    <img
+                        src={selectedImage}
+                        alt=""
+                        className="h-44 w-full object-contain"
+                    />
+                ) : (
+                    <div className="flex h-44 w-full items-center justify-center text-sm text-muted-foreground">
+                        No image
+                    </div>
+                )}
+            </div>
+            {product.images.length > 1 && (
+                <div className="grid grid-cols-4 gap-2">
+                    {product.images.map((image) => (
+                        <button
+                            key={image.id}
+                            type="button"
+                            onClick={() => setSelectedImage(image.url)}
+                            className={`aspect-square rounded-md border bg-white p-1 transition ${
+                                selectedImage === image.url
+                                    ? 'border-brand-gold'
+                                    : 'border-border hover:border-brand-gold'
+                            }`}
+                        >
+                            <img
+                                src={image.url}
+                                alt=""
+                                className="size-full object-contain"
+                            />
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
 function Detail({ label, value }: { label: string; value: string | null }) {
     return (
         <div>
@@ -302,4 +336,3 @@ function StatusBadge({ active }: { active: boolean }) {
         </span>
     );
 }
-
