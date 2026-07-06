@@ -1,4 +1,6 @@
 import { Form, Link } from '@inertiajs/react';
+import { X } from 'lucide-react';
+import { useState } from 'react';
 import InputError from '@/components/input-error';
 import { AdminFormShell } from '@/components/admin/admin-form-shell';
 import { MultiImageUploadPreview } from '@/components/admin/media-upload-preview';
@@ -40,6 +42,18 @@ export function ProductForm({
     product,
     cancelHref,
 }: Props) {
+    const [existingImages, setExistingImages] = useState(
+        () => product?.images ?? [],
+    );
+    const [removedImageIds, setRemovedImageIds] = useState<number[]>([]);
+
+    function removeExistingImage(id: number) {
+        setExistingImages((images) =>
+            images.filter((image) => image.id !== id),
+        );
+        setRemovedImageIds((ids) => (ids.includes(id) ? ids : [...ids, id]));
+    }
+
     return (
         <Form
             {...action}
@@ -155,28 +169,40 @@ export function ProductForm({
                         <InputError message={errors.description} />
                     </div>
 
-                    {product?.images && product.images.length > 0 && (
+                    {removedImageIds.map((id) => (
+                        <input
+                            key={id}
+                            type="hidden"
+                            name="remove_image_ids[]"
+                            value={id}
+                        />
+                    ))}
+
+                    {existingImages.length > 0 && (
                         <div className="grid gap-3">
                             <Label>Existing images</Label>
                             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                                {product.images.map((image) => (
-                                    <label
+                                {existingImages.map((image) => (
+                                    <div
                                         key={image.id}
-                                        className="rounded-md border p-3"
+                                        className="relative rounded-md border bg-white p-3"
                                     >
                                         <img
                                             src={image.url}
                                             alt=""
                                             className="h-28 w-full object-contain"
                                         />
-                                        <span className="mt-2 flex items-center gap-2 text-sm">
-                                            <Checkbox
-                                                name="remove_image_ids[]"
-                                                value={image.id}
-                                            />
-                                            Remove from product
-                                        </span>
-                                    </label>
+                                        <button
+                                            type="button"
+                                            aria-label="Remove image"
+                                            onClick={() =>
+                                                removeExistingImage(image.id)
+                                            }
+                                            className="absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-sm transition hover:bg-destructive/90"
+                                        >
+                                            <X className="size-3.5" />
+                                        </button>
+                                    </div>
                                 ))}
                             </div>
                         </div>
