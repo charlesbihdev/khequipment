@@ -81,7 +81,7 @@ export default function ProductsIndex({
         const basePosition = products.from ?? 1;
 
         router.patch(
-            '/admin/products/order',
+            productsRoute.order.url(),
             {
                 products: nextRows.map((product, index) => ({
                     id: product.id,
@@ -302,3 +302,4 @@ function StatusBadge({ active }: { active: boolean }) {
         </span>
     );
 }
+
