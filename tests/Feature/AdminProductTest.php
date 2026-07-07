@@ -211,3 +211,26 @@ it('keeps existing product images when uploading more images during edit', funct
         'filename' => 'existing.jpg',
     ]);
 });
+
+it('retrieves images in order of id ascending (insertion order)', function () {
+    $category = Category::create([
+        'name' => 'Mixers',
+        'slug' => 'mixers',
+    ]);
+    $product = Product::create([
+        'category_id' => $category->id,
+        'name' => 'Concrete Mixer',
+        'slug' => 'concrete-mixer',
+    ]);
+
+    // Create images in a random alphabetical order to ensure order is by ID, not filename
+    $img3 = $product->images()->create(['filename' => 'z-image.jpg']);
+    $img1 = $product->images()->create(['filename' => 'm-image.jpg']);
+    $img2 = $product->images()->create(['filename' => 'a-image.jpg']);
+
+    $retrievedImages = $product->fresh()->images;
+
+    expect($retrievedImages->first()->id)->toBe($img3->id);
+    expect($retrievedImages->get(1)->id)->toBe($img1->id);
+    expect($retrievedImages->last()->id)->toBe($img2->id);
+});
