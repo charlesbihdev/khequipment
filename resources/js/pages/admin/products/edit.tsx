@@ -9,10 +9,12 @@ type Product = Parameters<typeof ProductForm>[0]['product'];
 export default function EditProduct({
     product,
     categories,
+    brands = [],
     returnTo,
 }: {
     product: Product;
     categories: SelectOption[];
+    brands: string[];
     returnTo: string;
 }) {
     return (
@@ -26,6 +28,7 @@ export default function EditProduct({
                     })}
                     product={product}
                     categories={categories}
+                    brands={brands}
                     cancelHref={returnTo}
                 />
             </div>

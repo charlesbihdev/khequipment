@@ -34,6 +34,7 @@ type Props = {
     categories: SelectOption[];
     product?: Product;
     cancelHref?: string;
+    brands?: string[];
 };
 
 export function ProductForm({
@@ -41,6 +42,7 @@ export function ProductForm({
     categories,
     product,
     cancelHref,
+    brands = [],
 }: Props) {
     const [existingImages, setExistingImages] = useState(
         () => product?.images ?? [],
@@ -103,12 +105,20 @@ export function ProductForm({
                             </select>
                             <InputError message={errors.category_id} />
                         </div>
-                        <Field
-                            name="brand"
-                            label="Brand"
-                            error={errors.brand}
-                            defaultValue={product?.brand}
-                        />
+                        <div>
+                            <Field
+                                name="brand"
+                                label="Brand"
+                                error={errors.brand}
+                                defaultValue={product?.brand}
+                                list="brand-list"
+                            />
+                            <datalist id="brand-list">
+                                {brands.map((brand) => (
+                                    <option key={brand} value={brand} />
+                                ))}
+                            </datalist>
+                        </div>
                     </div>
 
                     <div className="grid gap-5 md:grid-cols-3">
@@ -240,6 +250,7 @@ function Field(props: {
     defaultValue?: string | null;
     placeholder?: string;
     required?: boolean;
+    list?: string;
 }) {
     return (
         <div className="grid gap-2">
@@ -256,6 +267,7 @@ function Field(props: {
                 defaultValue={props.defaultValue ?? ''}
                 placeholder={props.placeholder}
                 required={props.required}
+                list={props.list}
             />
             <InputError message={props.error} />
         </div>

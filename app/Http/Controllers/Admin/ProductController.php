@@ -59,6 +59,7 @@ class ProductController extends Controller
     {
         return Inertia::render('admin/products/create', [
             'categories' => $this->categories(),
+            'brands' => $this->brands(),
         ]);
     }
 
@@ -98,6 +99,7 @@ class ProductController extends Controller
                 ]),
             ],
             'categories' => $this->categories(),
+            'brands' => $this->brands(),
             'returnTo' => $this->returnToProductsIndex($request),
         ]);
     }
@@ -211,6 +213,17 @@ class ProductController extends Controller
     private function categories()
     {
         return Category::query()->orderBy('name')->get(['id', 'name']);
+    }
+
+    private function brands(): array
+    {
+        return Product::query()
+            ->whereNotNull('brand')
+            ->where('brand', '<>', '')
+            ->orderBy('brand')
+            ->distinct()
+            ->pluck('brand')
+            ->all();
     }
 
     private function summary(Product $product): array
