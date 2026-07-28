@@ -82,6 +82,21 @@ class PromoController extends Controller
         return to_route('admin.promos.index');
     }
 
+    public function visibility(Request $request, Promo $promo): RedirectResponse
+    {
+        $data = $request->validate([
+            'is_active' => ['required', 'boolean'],
+        ]);
+
+        $promo->update([
+            'is_active' => $request->boolean('is_active'),
+        ]);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Promo visibility updated.']);
+
+        return back();
+    }
+
     public function destroy(Promo $promo): RedirectResponse
     {
         $promo->delete();

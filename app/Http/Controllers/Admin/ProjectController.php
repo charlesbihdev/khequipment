@@ -63,6 +63,34 @@ class ProjectController extends Controller
         return to_route('admin.projects.index');
     }
 
+    public function visibility(Request $request, Project $project): RedirectResponse
+    {
+        $data = $request->validate([
+            'field' => ['required', Rule::in(['is_published', 'is_featured'])],
+            'value' => ['required', 'boolean'],
+        ]);
+
+        $value = $request->boolean('value');
+
+        if ($data['field'] === 'is_published') {
+            $project->forceFill([
+                'is_published' => $value,
+                'is_featured' => $value ? $project->is_featured : false,
+                'published_at' => $value ? ($project->published_at ?? now()) : null,
+            ])->save();
+        }
+
+        if ($data['field'] === 'is_featured') {
+            $project->forceFill([
+                'is_featured' => $project->is_published && $value,
+            ])->save();
+        }
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Project visibility updated.']);
+
+        return back();
+    }
+
     public function destroy(Project $project): RedirectResponse
     {
         $project->delete();

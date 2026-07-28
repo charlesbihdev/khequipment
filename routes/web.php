@@ -48,12 +48,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('categories', AdminCategoryController::class)->except('show');
         Route::patch('products/order', [AdminProductController::class, 'order'])->name('products.order');
+        Route::patch('products/{product}/visibility', [AdminProductController::class, 'visibility'])->name('products.visibility');
         Route::resource('products', AdminProductController::class)->except('show');
+        Route::patch('projects/{project}/visibility', [AdminProjectController::class, 'visibility'])->name('projects.visibility');
         Route::resource('projects', AdminProjectController::class)->except('show');
+        Route::patch('promos/{promo}/visibility', [AdminPromoController::class, 'visibility'])->name('promos.visibility');
         Route::resource('promos', AdminPromoController::class)->except('show');
         Route::resource('quotes', AdminQuoteController::class)->only(['index', 'show', 'destroy']);
     });
 });
 
 require __DIR__.'/settings.php';
-
