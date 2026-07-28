@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -82,7 +83,7 @@ class ProjectController extends Controller
             'location' => ['nullable', 'string', 'max:255'],
             'summary' => ['nullable', 'string', 'max:280'],
             'content' => ['nullable', 'string'],
-            'status' => ['required', 'string', 'max:40'],
+            'status' => ['required', Rule::in(['planned', 'in_progress', 'delivered', 'on_hold'])],
             'started_at' => ['nullable', 'date'],
             'completed_at' => ['nullable', 'date'],
             'cover_media_type' => ['required', 'in:image,video'],
@@ -103,9 +104,8 @@ class ProjectController extends Controller
         if ($exists) {
             throw ValidationException::withMessages(['slug' => 'The slug has already been taken.']);
         }
-
-        $data['is_featured'] = $request->boolean('is_featured');
         $data['is_published'] = $request->boolean('is_published');
+        $data['is_featured'] = $data['is_published'] && $request->boolean('is_featured');
         $data['published_at'] = $data['is_published'] ? ($project?->published_at ?? now()) : null;
         $data['sort_order'] = $data['sort_order'] ?? 0;
 

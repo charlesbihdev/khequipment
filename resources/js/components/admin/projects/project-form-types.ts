@@ -1,0 +1,40 @@
+export type AdminProject = {
+    id: number;
+    title: string;
+    slug: string;
+    category: string;
+    deliverable: string | null;
+    client_name: string | null;
+    location: string | null;
+    summary: string | null;
+    content: string | null;
+    status: string;
+    started_at: string | null;
+    completed_at: string | null;
+    cover_media_type: 'image' | 'video';
+    is_featured: boolean;
+    is_published: boolean;
+    sort_order: number;
+    mediaUrl?: string | null;
+};
+
+export type ProjectFormData = {
+    title: string;
+    slug: string;
+    category: string;
+    deliverable: string;
+    client_name: string;
+    location: string;
+    summary: string;
+    content: string;
+    status: string;
+    started_at: string;
+    completed_at: string;
+    sort_order: string;
+    cover_media_type: 'image' | 'video';
+    cover_media: File | null;
+    images?: File[];
+    is_featured: boolean;
+    is_published: boolean;
+    _method?: string;
+};

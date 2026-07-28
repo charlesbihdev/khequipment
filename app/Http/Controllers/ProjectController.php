@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -24,7 +25,7 @@ class ProjectController extends Controller
                 'location' => $project->location,
                 'summary' => $project->summary,
                 'content' => Project::sanitizeTiptapContent($project->content),
-                'status' => $project->status,
+                'status' => Str::headline($project->status),
                 'startedAt' => $project->started_at?->toFormattedDateString(),
                 'completedAt' => $project->completed_at?->toFormattedDateString(),
                 'mediaType' => $project->cover_media_type,
