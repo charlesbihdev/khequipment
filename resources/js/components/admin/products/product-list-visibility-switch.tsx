@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import productsRoute from '@/routes/admin/products';
 
-type ProductVisibilityField = 'is_new' | 'is_active';
+type ProductVisibilityField = 'is_active';
 
 type ProductListVisibilitySwitchProps = {
     productId: number;
