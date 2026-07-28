@@ -263,28 +263,3 @@ it('toggles product active state from the product list', function () {
 
     expect($product->fresh())->is_active->toBeFalse();
 });
-
-it('toggles product condition from the product list', function () {
-    $user = User::factory()->create();
-    $category = Category::create([
-        'name' => 'Mixers',
-        'slug' => 'mixers',
-    ]);
-    $product = Product::create([
-        'category_id' => $category->id,
-        'name' => 'Concrete Mixer',
-        'slug' => 'concrete-mixer',
-        'is_new' => true,
-    ]);
-
-    $this
-        ->actingAs($user)
-        ->from(route('admin.products.index'))
-        ->patch(route('admin.products.visibility', $product), [
-            'field' => 'is_new',
-            'value' => false,
-        ])
-        ->assertRedirect(route('admin.products.index'));
-
-    expect($product->fresh())->is_new->toBeFalse();
-});

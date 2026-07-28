@@ -140,7 +140,7 @@ class ProductController extends Controller
     public function visibility(Request $request, Product $product): RedirectResponse
     {
         $data = $request->validate([
-            'field' => ['required', Rule::in(['is_new', 'is_active'])],
+            'field' => ['required', Rule::in(['is_active'])],
             'value' => ['required', 'boolean'],
         ]);
 

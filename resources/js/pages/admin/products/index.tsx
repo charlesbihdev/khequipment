@@ -51,12 +51,7 @@ export default function ProductsIndex({
     const { url } = usePage();
     const rowsKey = products.data
         .map((product) =>
-            [
-                product.id,
-                product.sortOrder,
-                product.isNew,
-                product.isActive,
-            ].join(':'),
+            [product.id, product.sortOrder, product.isActive].join(':'),
         )
         .join('|');
     const [rowState, setRowState] = useState<{
@@ -195,12 +190,7 @@ export default function ProductsIndex({
                                 </td>
                                 <td className="px-4 py-3">{product.brand}</td>
                                 <td className="px-4 py-3">
-                                    <ProductListVisibilitySwitch
-                                        productId={product.id}
-                                        checked={product.isNew}
-                                        field="is_new"
-                                        label={`Toggle new condition for ${product.name}`}
-                                    />
+                                    {product.isNew ? 'New' : 'Used'}
                                 </td>
                                 <td className="px-4 py-3">
                                     <ProductListVisibilitySwitch
