@@ -20,6 +20,7 @@ it('allows quote requests without an email address', function () {
         'name' => 'Titan Mixer',
         'slug' => 'titan-mixer',
         'is_active' => true,
+        'powered_by' => 'Diesel',
     ]);
 
     $this->post(route('quotes.store'), [
@@ -40,6 +41,10 @@ it('allows quote requests without an email address', function () {
 
     expect($quote->email)->toBeNull()
         ->and($quote->name)->toBe('Ama Mensah');
+
+    $mail = (new QuoteRequestReceived($quote))->toMail(new stdClass);
+
+    expect($mail->introLines)->toContain('Powered by: Diesel');
 
     Notification::assertSentOnDemand(QuoteRequestReceived::class);
 });

@@ -26,6 +26,8 @@ class QuoteRequestReceived extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
+        $poweredBy = $this->quote->product?->powered_by;
+
         $mail = (new MailMessage)
             ->subject('Quote Request - KH Equipment Hub Website')
             ->greeting('Quote Request')
@@ -33,8 +35,13 @@ class QuoteRequestReceived extends Notification
             ->line('Customer Name: '.$this->quote->name)
             ->line('Customer Email: '.($this->quote->email ?: 'Not provided'))
             ->line('Phone Number: '.$this->quote->phone)
-            ->line('Product Name: '.$this->quote->product_name_snapshot)
-            ->line('Company: '.($this->quote->company ?: 'Not provided'))
+            ->line('Product Name: '.$this->quote->product_name_snapshot);
+
+        if ($poweredBy) {
+            $mail->line('Powered by: '.$poweredBy);
+        }
+
+        $mail->line('Company: '.($this->quote->company ?: 'Not provided'))
             ->line('Address: '.$this->quote->address)
             ->line('Country: '.$this->quote->country);
 
