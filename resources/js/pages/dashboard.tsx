@@ -11,13 +11,16 @@ type RecentQuote = {
     id: number;
     name: string;
     product: string;
-    email: string;
+    email: string | null;
     phone: string;
     createdAt: string | null;
 };
 
 type Props = {
-    stats: Record<'products' | 'categories' | 'projects' | 'activePromos' | 'quotes', number>;
+    stats: Record<
+        'products' | 'categories' | 'projects' | 'activePromos' | 'quotes',
+        number
+    >;
     recentQuotes: RecentQuote[];
 };
 
@@ -40,7 +43,10 @@ export default function Dashboard({ stats, recentQuotes }: Props) {
                 />
 
                 <div className="flex flex-wrap gap-3">
-                    <Button asChild className="bg-brand-gold text-brand-gold-foreground hover:bg-brand-gold/90">
+                    <Button
+                        asChild
+                        className="bg-brand-gold text-brand-gold-foreground hover:bg-brand-gold/90"
+                    >
                         <Link href={products.create()}>Add product</Link>
                     </Button>
                     <Button asChild variant="outline">
@@ -90,7 +96,8 @@ export default function Dashboard({ stats, recentQuotes }: Props) {
                                     </p>
                                 </div>
                                 <p className="mt-1 text-sm text-muted-foreground">
-                                    {quote.product} · {quote.email} · {quote.phone}
+                                    {quote.product} |{' '}
+                                    {quote.email ?? 'No email'} | {quote.phone}
                                 </p>
                             </Link>
                         ))}

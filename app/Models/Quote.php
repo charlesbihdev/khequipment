@@ -17,7 +17,7 @@ use Illuminate\Support\Carbon;
  * @property string $country
  * @property string|null $message
  * @property string $phone
- * @property string $email
+ * @property string|null $email
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
@@ -34,6 +34,9 @@ use Illuminate\Support\Carbon;
 ])]
 class Quote extends Model
 {
+    /**
+     * @return BelongsTo<Product, $this>
+     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

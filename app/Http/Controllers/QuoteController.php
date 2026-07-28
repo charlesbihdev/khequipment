@@ -23,13 +23,13 @@ class QuoteController extends Controller
             'company' => ['nullable', 'string', 'max:140'],
             'address' => ['required', 'string', 'max:200'],
             'country' => ['required', 'string', 'max:50'],
-            'email' => ['required', 'email', 'max:100'],
+            'email' => ['nullable', 'email', 'max:100'],
             'phone' => ['required', 'string', 'max:100'],
             'message' => ['nullable', 'string', 'max:5000'],
             'website' => ['prohibited'],
         ]);
 
-        $product = Product::query()->findOrFail($data['product_id']);
+        $product = Product::query()->whereKey($request->integer('product_id'))->firstOrFail();
 
         $quote = Quote::create([
             'product_id' => $product->id,
@@ -40,7 +40,7 @@ class QuoteController extends Controller
             'country' => $data['country'],
             'message' => $data['message'] ?? null,
             'phone' => $data['phone'],
-            'email' => $data['email'],
+            'email' => $data['email'] ?? null,
         ]);
 
         try {
