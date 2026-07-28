@@ -31,7 +31,7 @@ class QuoteRequestReceived extends Notification
             ->greeting('Quote Request')
             ->line('A customer requested a quote from KH Equipment Hub.')
             ->line('Customer Name: '.$this->quote->name)
-            ->line('Customer Email: '.$this->quote->email)
+            ->line('Customer Email: '.($this->quote->email ?: 'Not provided'))
             ->line('Phone Number: '.$this->quote->phone)
             ->line('Product Name: '.$this->quote->product_name_snapshot)
             ->line('Company: '.($this->quote->company ?: 'Not provided'))

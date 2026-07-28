@@ -1,6 +1,7 @@
 import { useForm } from '@inertiajs/react';
 import { Send, X } from 'lucide-react';
-import { type FormEvent, useState } from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { store } from '@/routes/quotes';
 
 type ProductActionsProps = {
@@ -228,7 +229,6 @@ export function ProductActions({
                                     value={data.email}
                                     error={errors.email}
                                     placeholder="name@company.com"
-                                    required
                                     onChange={(value) =>
                                         setData('email', value)
                                     }

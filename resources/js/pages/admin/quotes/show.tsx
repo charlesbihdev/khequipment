@@ -13,7 +13,7 @@ type Quote = {
     country: string;
     message: string | null;
     phone: string;
-    email: string;
+    email: string | null;
     createdAt: string | null;
 };
 
@@ -22,10 +22,16 @@ export default function ShowQuote({ quote }: { quote: Quote }) {
         <>
             <Head title={`Quote from ${quote.name}`} />
             <div className="space-y-6 p-4 md:p-6">
-                <AdminPageHeader title="Quote request" description={quote.createdAt ?? undefined} />
+                <AdminPageHeader
+                    title="Quote request"
+                    description={quote.createdAt ?? undefined}
+                />
                 <div className="grid gap-4 rounded-lg border bg-card p-5 shadow-sm md:grid-cols-2">
                     <Detail label="Customer" value={quote.name} />
-                    <Detail label="Product" value={quote.product_name_snapshot} />
+                    <Detail
+                        label="Product"
+                        value={quote.product_name_snapshot}
+                    />
                     <Detail label="Company" value={quote.company} />
                     <Detail label="Country" value={quote.country} />
                     <Detail label="Email" value={quote.email} />
@@ -34,19 +40,37 @@ export default function ShowQuote({ quote }: { quote: Quote }) {
                     <Detail label="Message" value={quote.message} wide />
                 </div>
                 <div className="flex gap-3">
-                    <Button asChild variant="outline"><Link href={quotes.index()}>Back</Link></Button>
-                    <ConfirmDeleteButton form={quotes.destroy.form(quote.id)} label="Delete quote" title="Delete quote?" />
+                    <Button asChild variant="outline">
+                        <Link href={quotes.index()}>Back</Link>
+                    </Button>
+                    <ConfirmDeleteButton
+                        form={quotes.destroy.form(quote.id)}
+                        label="Delete quote"
+                        title="Delete quote?"
+                    />
                 </div>
             </div>
         </>
     );
 }
 
-function Detail({ label, value, wide }: { label: string; value: string | null; wide?: boolean }) {
+function Detail({
+    label,
+    value,
+    wide,
+}: {
+    label: string;
+    value: string | null;
+    wide?: boolean;
+}) {
     return (
         <div className={wide ? 'md:col-span-2' : ''}>
-            <p className="text-xs font-bold tracking-wide text-brand-gold uppercase">{label}</p>
-            <p className="mt-1 text-sm text-foreground">{value || 'Not provided'}</p>
+            <p className="text-xs font-bold tracking-wide text-brand-gold uppercase">
+                {label}
+            </p>
+            <p className="mt-1 text-sm text-foreground">
+                {value || 'Not provided'}
+            </p>
         </div>
     );
 }
