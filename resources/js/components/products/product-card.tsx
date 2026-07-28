@@ -16,12 +16,12 @@ export function ProductCard({ product }: ProductCardProps) {
             prefetch
             className="group block cursor-pointer overflow-hidden rounded-md border border-border bg-card shadow-sm transition hover:border-brand-gold hover:shadow-md"
         >
-            <div className="relative aspect-[4/3] bg-muted">
+            <div className="relative aspect-[4/3] bg-white p-3">
                 {product.imageUrl ? (
                     <img
                         src={product.imageUrl}
                         alt={product.name}
-                        className="size-full object-cover transition duration-300 group-hover:scale-105"
+                        className="size-full object-contain"
                         loading="lazy"
                     />
                 ) : (
