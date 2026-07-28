@@ -37,7 +37,7 @@ export default function Home({ promos = [], projects }: HomeProps) {
                 >
                     <ProjectsSection projects={projects} />
                 </Deferred>
-                <EquipmentPreview />
+                {/* <EquipmentPreview /> */}
                 <Footer />
             </main>
         </>

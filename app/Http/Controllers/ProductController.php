@@ -24,7 +24,8 @@ class ProductController extends Controller
             ->map(fn ($slug): string => Str::slug((string) $slug))
             ->filter()
             ->values();
-        $selectedBrands = $this->brands()
+        $availableBrands = $this->brands($categorySlugs);
+        $selectedBrands = $availableBrands
             ->whereIn('slug', $brandSlugs)
             ->pluck('name')
             ->values();
@@ -68,11 +69,13 @@ class ProductController extends Controller
                 ->where('is_active', true)
                 ->orderBy('name')
                 ->get(['id', 'name', 'slug']),
-            'brands' => Inertia::defer(fn () => $this->brands()),
+            'brands' => Inertia::defer(fn () => $availableBrands),
             'products' => $products,
             'filters' => [
                 'category' => $categorySlugs->all(),
-                'brand' => $brandSlugs->all(),
+                'brand' => $selectedBrands
+                    ->map(fn (string $brand): string => Str::slug($brand))
+                    ->all(),
             ],
         ]);
     }
@@ -113,11 +116,19 @@ class ProductController extends Controller
         ]);
     }
 
-    private function brands()
+    private function brands($categorySlugs = null)
     {
+        $categorySlugs = collect($categorySlugs);
+
         return Product::query()
             ->where('is_active', true)
-            ->whereHas('category', fn ($query) => $query->where('is_active', true))
+            ->whereHas('category', function ($query) use ($categorySlugs): void {
+                $query->where('is_active', true)
+                    ->when(
+                        $categorySlugs->isNotEmpty(),
+                        fn ($query) => $query->whereIn('slug', $categorySlugs),
+                    );
+            })
             ->whereNotNull('brand')
             ->where('brand', '<>', '')
             ->orderBy('brand')
@@ -130,4 +141,3 @@ class ProductController extends Controller
             ->values();
     }
 }
-

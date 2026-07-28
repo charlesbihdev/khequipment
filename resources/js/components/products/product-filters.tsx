@@ -28,10 +28,6 @@ export function ProductFilters({
         return products.url({
             query: {
                 category: next.length > 0 ? next.join(',') : undefined,
-                brand:
-                    selectedBrandSlugs.length > 0
-                        ? selectedBrandSlugs.join(',')
-                        : undefined,
             },
         });
     };
@@ -47,7 +43,7 @@ export function ProductFilters({
                     selectedBrandSlugs.length > 0) && (
                     <Link
                         href={products.url()}
-                        only={['products', 'filters']}
+                        only={['products', 'filters', 'brands']}
                         prefetch
                         preserveScroll
                         onClick={() => closeOnClick && setOpen(false)}
@@ -67,7 +63,7 @@ export function ProductFilters({
                         <Link
                             key={category.id}
                             href={hrefFor(category.slug)}
-                            only={['products', 'filters']}
+                            only={['products', 'filters', 'brands']}
                             prefetch
                             preserveScroll
                             onClick={() => closeOnClick && setOpen(false)}

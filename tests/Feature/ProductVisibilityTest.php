@@ -97,3 +97,84 @@ it('shows newest products first until a manual order is set', function () {
             ->where('products.data.1.slug', 'newer-mixer'),
         );
 });
+
+it('ignores selected brands that are unavailable in selected categories', function () {
+    $mixers = Category::create([
+        'name' => 'Mixers',
+        'slug' => 'mixers',
+        'is_active' => true,
+    ]);
+    $generators = Category::create([
+        'name' => 'Generators',
+        'slug' => 'generators',
+        'is_active' => true,
+    ]);
+
+    Product::create([
+        'category_id' => $mixers->id,
+        'name' => 'Titan Mixer',
+        'slug' => 'titan-mixer',
+        'brand' => 'Titan',
+        'is_active' => true,
+    ]);
+    Product::create([
+        'category_id' => $mixers->id,
+        'name' => 'Megfin Mixer',
+        'slug' => 'megfin-mixer',
+        'brand' => 'Megfin',
+        'is_active' => true,
+    ]);
+    Product::create([
+        'category_id' => $generators->id,
+        'name' => 'Bosch Generator',
+        'slug' => 'bosch-generator',
+        'brand' => 'Bosch',
+        'is_active' => true,
+    ]);
+
+    $this->get(route('products', [
+        'category' => 'mixers',
+        'brand' => 'bosch',
+    ]))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->has('products.data', 2)
+            ->where('filters.category', ['mixers'])
+            ->where('filters.brand', []),
+        );
+});
+
+it('filters products by brands available in selected categories', function () {
+    $mixers = Category::create([
+        'name' => 'Mixers',
+        'slug' => 'mixers',
+        'is_active' => true,
+    ]);
+
+    Product::create([
+        'category_id' => $mixers->id,
+        'name' => 'Titan Mixer',
+        'slug' => 'titan-mixer',
+        'brand' => 'Titan',
+        'is_active' => true,
+    ]);
+    Product::create([
+        'category_id' => $mixers->id,
+        'name' => 'Megfin Mixer',
+        'slug' => 'megfin-mixer',
+        'brand' => 'Megfin',
+        'is_active' => true,
+    ]);
+
+    $this->get(route('products', [
+        'category' => 'mixers',
+        'brand' => 'titan',
+    ]))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->has('products.data', 1)
+            ->where('products.data.0.slug', 'titan-mixer')
+            ->where('filters.category', ['mixers'])
+            ->where('filters.brand', ['titan']),
+        );
+});
