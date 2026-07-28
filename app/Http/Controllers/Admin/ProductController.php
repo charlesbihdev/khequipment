@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -132,6 +133,22 @@ class ProductController extends Controller
         });
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Product order updated.']);
+
+        return back();
+    }
+
+    public function visibility(Request $request, Product $product): RedirectResponse
+    {
+        $data = $request->validate([
+            'field' => ['required', Rule::in(['is_new', 'is_active'])],
+            'value' => ['required', 'boolean'],
+        ]);
+
+        $product->update([
+            $data['field'] => $request->boolean('value'),
+        ]);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Product visibility updated.']);
 
         return back();
     }

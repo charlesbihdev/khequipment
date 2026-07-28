@@ -1,11 +1,12 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { GripVertical } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { AdminPageHeader } from '@/components/admin/admin-page-header';
 import { AdminPagination } from '@/components/admin/admin-pagination';
 import { AdminTable, EmptyTableRow } from '@/components/admin/admin-table';
 import { ConfirmDeleteButton } from '@/components/admin/confirm-delete-button';
 import { ProductFilters } from '@/components/admin/products/product-filters';
+import { ProductListVisibilitySwitch } from '@/components/admin/products/product-list-visibility-switch';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -48,18 +49,29 @@ export default function ProductsIndex({
     };
 }) {
     const { url } = usePage();
-    const [rows, setRows] = useState(products.data);
+    const rowsKey = products.data
+        .map((product) =>
+            [
+                product.id,
+                product.sortOrder,
+                product.isNew,
+                product.isActive,
+            ].join(':'),
+        )
+        .join('|');
+    const [rowState, setRowState] = useState<{
+        key: string;
+        rows: ProductRow[];
+    } | null>(null);
+    const rows = rowState?.key === rowsKey ? rowState.rows : products.data;
     const [draggedId, setDraggedId] = useState<number | null>(null);
     const [dragOverId, setDragOverId] = useState<number | null>(null);
-
-    useEffect(() => {
-        setRows(products.data);
-    }, [products.data]);
 
     function moveProduct(targetId: number) {
         if (draggedId === null || draggedId === targetId) {
             setDraggedId(null);
             setDragOverId(null);
+
             return;
         }
 
@@ -69,13 +81,14 @@ export default function ProductsIndex({
         if (fromIndex === -1 || toIndex === -1) {
             setDraggedId(null);
             setDragOverId(null);
+
             return;
         }
 
         const nextRows = [...rows];
         const [movedProduct] = nextRows.splice(fromIndex, 1);
         nextRows.splice(toIndex, 0, movedProduct);
-        setRows(nextRows);
+        setRowState({ key: rowsKey, rows: nextRows });
         setDraggedId(null);
         setDragOverId(null);
 
@@ -182,10 +195,20 @@ export default function ProductsIndex({
                                 </td>
                                 <td className="px-4 py-3">{product.brand}</td>
                                 <td className="px-4 py-3">
-                                    {product.isNew ? 'New' : 'Used'}
+                                    <ProductListVisibilitySwitch
+                                        productId={product.id}
+                                        checked={product.isNew}
+                                        field="is_new"
+                                        label={`Toggle new condition for ${product.name}`}
+                                    />
                                 </td>
                                 <td className="px-4 py-3">
-                                    <StatusBadge active={product.isActive} />
+                                    <ProductListVisibilitySwitch
+                                        productId={product.id}
+                                        checked={product.isActive}
+                                        field="is_active"
+                                        label={`Toggle active status for ${product.name}`}
+                                    />
                                 </td>
                                 <td className="px-4 py-3">
                                     <div className="flex justify-end gap-2">
@@ -321,18 +344,5 @@ function Detail({ label, value }: { label: string; value: string | null }) {
             </p>
             <p className="mt-1 text-foreground">{value || 'Not provided'}</p>
         </div>
-    );
-}
-function StatusBadge({ active }: { active: boolean }) {
-    return (
-        <span
-            className={
-                active
-                    ? 'rounded-md bg-success px-2 py-1 text-xs font-semibold text-success-foreground'
-                    : 'rounded-md bg-muted px-2 py-1 text-xs font-semibold text-muted-foreground'
-            }
-        >
-            {active ? 'Active' : 'Hidden'}
-        </span>
     );
 }

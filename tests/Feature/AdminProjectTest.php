@@ -51,3 +51,57 @@ it('clears featured when a project is unpublished', function () {
         ->is_featured->toBeFalse()
         ->status->toBe('on_hold');
 });
+
+it('toggles project published from the project list', function () {
+    $user = User::factory()->create();
+    $project = Project::create([
+        'title' => 'Warehouse Fit Out',
+        'slug' => 'warehouse-fit-out',
+        'category' => 'project',
+        'status' => 'delivered',
+        'cover_media_type' => 'image',
+        'is_featured' => true,
+        'is_published' => true,
+    ]);
+
+    $this
+        ->actingAs($user)
+        ->from(route('admin.projects.index'))
+        ->patch(route('admin.projects.visibility', $project), [
+            'field' => 'is_published',
+            'value' => false,
+        ])
+        ->assertRedirect(route('admin.projects.index'))
+        ->assertInertiaFlash('toast', [
+            'type' => 'success',
+            'message' => 'Project visibility updated.',
+        ]);
+
+    expect($project->fresh())
+        ->is_published->toBeFalse()
+        ->is_featured->toBeFalse();
+});
+
+it('does not feature an unpublished project from the project list', function () {
+    $user = User::factory()->create();
+    $project = Project::create([
+        'title' => 'Warehouse Fit Out',
+        'slug' => 'warehouse-fit-out',
+        'category' => 'project',
+        'status' => 'delivered',
+        'cover_media_type' => 'image',
+        'is_featured' => false,
+        'is_published' => false,
+    ]);
+
+    $this
+        ->actingAs($user)
+        ->from(route('admin.projects.index'))
+        ->patch(route('admin.projects.visibility', $project), [
+            'field' => 'is_featured',
+            'value' => true,
+        ])
+        ->assertRedirect(route('admin.projects.index'));
+
+    expect($project->fresh())->is_featured->toBeFalse();
+});
