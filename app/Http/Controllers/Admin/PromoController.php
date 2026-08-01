@@ -108,13 +108,15 @@ class PromoController extends Controller
 
     private function validated(Request $request, ?Promo $promo = null): array
     {
+        $mediaMaxKilobytes = $request->input('media_type') === 'video' ? 153600 : 20480;
+
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'eyebrow' => ['required', 'string', 'max:80'],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'media_type' => ['required', 'in:image,video'],
-            'media' => [$promo ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,webp,mp4,webm', 'max:20480'],
+            'media' => [$promo ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,webp,mp4,webm', "max:{$mediaMaxKilobytes}"],
             'product_id' => ['nullable', 'exists:products,id'],
             'cta_label' => ['required', 'string', 'max:80'],
             'cta_url' => ['nullable', 'url', 'max:255'],

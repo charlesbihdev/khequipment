@@ -2,6 +2,8 @@
 
 use App\Models\Promo;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 it('toggles promo active state from the promo list', function () {
     $user = User::factory()->create();
@@ -27,4 +29,40 @@ it('toggles promo active state from the promo list', function () {
         ]);
 
     expect($promo->fresh())->is_active->toBeFalse();
+});
+
+it('keeps promo images capped at 20 MB while allowing videos up to 150 MB', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create();
+    $basePayload = [
+        'title' => 'Large media promo',
+        'eyebrow' => "Today's Deal",
+        'cta_label' => 'Request on WhatsApp',
+        'is_active' => true,
+    ];
+
+    $this
+        ->actingAs($user)
+        ->post(route('admin.promos.store'), [
+            ...$basePayload,
+            'media_type' => 'image',
+            'media' => UploadedFile::fake()->create('oversized.jpg', 20481, 'image/jpeg'),
+        ])
+        ->assertSessionHasErrors('media');
+
+    $this
+        ->actingAs($user)
+        ->post(route('admin.promos.store'), [
+            ...$basePayload,
+            'title' => 'Large video promo',
+            'media_type' => 'video',
+            'media' => UploadedFile::fake()->create('promo.mp4', 150000, 'video/mp4'),
+        ])
+        ->assertRedirect(route('admin.promos.index'));
+
+    $this->assertDatabaseHas('promos', [
+        'title' => 'Large video promo',
+        'media_type' => 'video',
+    ]);
 });
