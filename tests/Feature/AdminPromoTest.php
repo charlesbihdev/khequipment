@@ -13,7 +13,7 @@ it('toggles promo active state from the promo list', function () {
         'media_type' => 'image',
         'media_path' => 'promos/mixer.jpg',
         'cta_label' => 'Request on WhatsApp',
-        'is_active' => true,
+        'is_active' => '1',
     ]);
 
     $this
@@ -39,7 +39,7 @@ it('keeps promo images capped at 20 MB while allowing videos up to 150 MB', func
         'title' => 'Large media promo',
         'eyebrow' => "Today's Deal",
         'cta_label' => 'Request on WhatsApp',
-        'is_active' => true,
+        'is_active' => '1',
     ];
 
     $this
