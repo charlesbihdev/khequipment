@@ -1,18 +1,18 @@
 import { Form, Link } from '@inertiajs/react';
 import { X } from 'lucide-react';
 import { useState } from 'react';
-import InputError from '@/components/input-error';
 import { AdminFormShell } from '@/components/admin/admin-form-shell';
 import { MultiImageUploadPreview } from '@/components/admin/media-upload-preview';
 import { RequiredLabel } from '@/components/admin/required-label';
+import { withMethodSpoof } from '@/components/admin/with-method-spoof';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { withMethodSpoof } from '@/components/admin/with-method-spoof';
 import products from '@/routes/admin/products';
-import type { RouteFormDefinition } from '@/wayfinder';
 import type { SelectOption } from '@/types';
+import type { RouteFormDefinition } from '@/wayfinder';
 
 type Product = {
     id: number;
@@ -48,11 +48,20 @@ export function ProductForm({
         () => product?.images ?? [],
     );
     const [removedImageIds, setRemovedImageIds] = useState<number[]>([]);
+    const [mainImageId, setMainImageId] = useState<number | null>(
+        () => product?.images?.[0]?.id ?? null,
+    );
 
     function removeExistingImage(id: number) {
-        setExistingImages((images) =>
-            images.filter((image) => image.id !== id),
-        );
+        setExistingImages((images) => {
+            const next = images.filter((image) => image.id !== id);
+            // If the main image was removed, promote the new first image.
+            setMainImageId((current) =>
+                current === id ? (next[0]?.id ?? null) : current,
+            );
+
+            return next;
+        });
         setRemovedImageIds((ids) => (ids.includes(id) ? ids : [...ids, id]));
     }
 
@@ -188,39 +197,89 @@ export function ProductForm({
                         />
                     ))}
 
+                    {mainImageId !== null && (
+                        <input
+                            type="hidden"
+                            name="main_image_id"
+                            value={mainImageId}
+                        />
+                    )}
+
                     {existingImages.length > 0 && (
                         <div className="grid gap-3">
-                            <Label>Existing images</Label>
+                            <div className="grid gap-0.5">
+                                <Label>Existing images</Label>
+                                <p className="text-xs text-muted-foreground">
+                                    The main image is shown first to customers.
+                                    Click a photo to make it the main image.
+                                </p>
+                            </div>
                             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                                {existingImages.map((image) => (
-                                    <div
-                                        key={image.id}
-                                        className="relative rounded-md border bg-white p-3"
-                                    >
-                                        <img
-                                            src={image.url}
-                                            alt=""
-                                            className="h-28 w-full object-contain"
-                                        />
-                                        <button
-                                            type="button"
-                                            aria-label="Remove image"
-                                            onClick={() =>
-                                                removeExistingImage(image.id)
-                                            }
-                                            className="absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-sm transition hover:bg-destructive/90"
+                                {existingImages.map((image) => {
+                                    const isMain = image.id === mainImageId;
+
+                                    return (
+                                        <div
+                                            key={image.id}
+                                            className={`group relative rounded-md border bg-white p-3 transition ${
+                                                isMain
+                                                    ? 'border-brand-gold ring-2 ring-brand-gold'
+                                                    : ''
+                                            }`}
                                         >
-                                            <X className="size-3.5" />
-                                        </button>
-                                    </div>
-                                ))}
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setMainImageId(image.id)
+                                                }
+                                                title={
+                                                    isMain
+                                                        ? 'Main image'
+                                                        : 'Set as main image'
+                                                }
+                                                className="block w-full cursor-pointer"
+                                            >
+                                                <img
+                                                    src={image.url}
+                                                    alt=""
+                                                    className="h-28 w-full object-contain"
+                                                />
+                                            </button>
+                                            {isMain ? (
+                                                <span className="absolute top-2 left-2 rounded bg-brand-gold px-1.5 py-0.5 text-[10px] font-bold text-brand-gold-foreground">
+                                                    Main
+                                                </span>
+                                            ) : (
+                                                <span className="absolute top-2 left-2 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-semibold text-white opacity-0 transition group-hover:opacity-100">
+                                                    Set as main
+                                                </span>
+                                            )}
+                                            <button
+                                                type="button"
+                                                aria-label="Remove image"
+                                                onClick={() =>
+                                                    removeExistingImage(
+                                                        image.id,
+                                                    )
+                                                }
+                                                className="absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-sm transition hover:bg-destructive/90"
+                                            >
+                                                <X className="size-3.5" />
+                                            </button>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     )}
 
                     <div className="grid gap-2">
                         <Label htmlFor="images">Add images</Label>
-                        <MultiImageUploadPreview id="images" name="images[]" />
+                        <MultiImageUploadPreview
+                            id="images"
+                            name="images[]"
+                            enableMainSelect={existingImages.length === 0}
+                        />
                         <InputError message={errors.images} />
                     </div>
 

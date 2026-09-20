@@ -28,7 +28,7 @@ class ProductController extends Controller
 
         return Inertia::render('admin/products/index', [
             'products' => Product::query()
-                ->with(['category:id,name', 'images:id,product_id,filename'])
+                ->with(['category:id,name', 'images:id,product_id,filename,sort_order'])
                 ->when($filters['search'] ?? null, function ($query, string $search): void {
                     $query->where(function ($query) use ($search): void {
                         $query
@@ -76,7 +76,7 @@ class ProductController extends Controller
 
     public function edit(Request $request, Product $product): Response
     {
-        $product->load(['images:id,product_id,filename']);
+        $product->load(['images:id,product_id,filename,sort_order']);
 
         return Inertia::render('admin/products/edit', [
             'product' => [
@@ -110,6 +110,7 @@ class ProductController extends Controller
         $product->update($this->validated($request, $product));
         $this->deleteImages($product->images()->whereIn('id', $request->input('remove_image_ids', []))->get());
         $this->storeImages($request, $product);
+        $this->setMainImage($product, $request->integer('main_image_id') ?: null);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Product updated.']);
 
@@ -189,6 +190,7 @@ class ProductController extends Controller
             'images.*' => ['nullable', 'image', 'max:5120'],
             'remove_image_ids' => ['array'],
             'remove_image_ids.*' => ['integer'],
+            'main_image_id' => ['nullable', 'integer'],
         ]);
 
         $data['slug'] = Str::slug($data['slug'] ?: $data['name']);
@@ -203,7 +205,7 @@ class ProductController extends Controller
             throw ValidationException::withMessages(['slug' => 'The slug has already been taken.']);
         }
 
-        return collect($data)->except(['images', 'remove_image_ids'])->all();
+        return collect($data)->except(['images', 'remove_image_ids', 'main_image_id'])->all();
     }
 
     private function deleteImages(iterable $images): void
@@ -216,6 +218,8 @@ class ProductController extends Controller
 
     private function storeImages(Request $request, Product $product): void
     {
+        $order = (int) $product->images()->max('sort_order');
+
         foreach ($request->file('images', []) as $image) {
             $path = $image->storeAs(
                 'products',
@@ -223,7 +227,28 @@ class ProductController extends Controller
                 'public',
             );
 
-            $product->images()->create(['filename' => basename($path)]);
+            $product->images()->create([
+                'filename' => basename($path),
+                'sort_order' => ++$order,
+            ]);
+        }
+    }
+
+    /**
+     * Promote the chosen image to be the main (first) image by reindexing
+     * sort_order, keeping the relative order of the remaining images.
+     */
+    private function setMainImage(Product $product, ?int $mainImageId): void
+    {
+        if (! $mainImageId || ! $product->images()->whereKey($mainImageId)->exists()) {
+            return;
+        }
+
+        $order = 0;
+        $product->images()->whereKey($mainImageId)->update(['sort_order' => $order++]);
+
+        foreach ($product->images()->whereKeyNot($mainImageId)->pluck('id') as $id) {
+            $product->images()->whereKey($id)->update(['sort_order' => $order++]);
         }
     }
 
