@@ -31,7 +31,7 @@ class ProductController extends Controller
             ->values();
 
         $products = Product::query()
-            ->with(['category:id,name,slug', 'images:id,product_id,filename'])
+            ->with(['category:id,name,slug', 'images:id,product_id,filename,sort_order'])
             ->where('is_active', true)
             ->whereHas('category', fn ($query) => $query->where('is_active', true))
             ->when(
@@ -84,7 +84,7 @@ class ProductController extends Controller
     {
         abort_unless($product->is_active && $product->category()->where('is_active', true)->exists(), 404);
 
-        $product->load(['category:id,name,slug', 'images:id,product_id,filename']);
+        $product->load(['category:id,name,slug', 'images:id,product_id,filename,sort_order']);
         $returnTo = $request->query('returnTo');
         $returnTo = is_string($returnTo) && str_starts_with($returnTo, '/products')
             ? $returnTo

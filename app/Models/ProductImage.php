@@ -11,10 +11,11 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $product_id
  * @property string $filename
+ * @property int $sort_order
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['product_id', 'filename'])]
+#[Fillable(['product_id', 'filename', 'sort_order'])]
 class ProductImage extends Model
 {
     public function product(): BelongsTo

@@ -39,13 +39,19 @@ export function SingleMediaUploadPreview({
 
     useEffect(() => {
         return () => {
-            if (preview) URL.revokeObjectURL(preview.url);
+            if (preview) {
+                URL.revokeObjectURL(preview.url);
+            }
         };
     }, [preview]);
 
     function selectFile(event: React.ChangeEvent<HTMLInputElement>) {
         const file = event.target.files?.[0] ?? null;
-        if (preview) URL.revokeObjectURL(preview.url);
+
+        if (preview) {
+            URL.revokeObjectURL(preview.url);
+        }
+
         setPreview(
             file
                 ? {
@@ -61,9 +67,16 @@ export function SingleMediaUploadPreview({
     }
 
     function clearFile() {
-        if (preview) URL.revokeObjectURL(preview.url);
+        if (preview) {
+            URL.revokeObjectURL(preview.url);
+        }
+
         setPreview(null);
-        if (inputRef.current) inputRef.current.value = '';
+
+        if (inputRef.current) {
+            inputRef.current.value = '';
+        }
+
         onFileChange?.(null);
     }
 
@@ -124,12 +137,15 @@ type MultiProps = {
     id: string;
     name: string;
     accept?: string;
+    /** Allow clicking a photo to promote it to the main (first) image. */
+    enableMainSelect?: boolean;
 };
 
 export function MultiImageUploadPreview({
     id,
     name,
     accept = 'image/*',
+    enableMainSelect = true,
 }: MultiProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [previews, setPreviews] = useState<PreviewFile[]>([]);
@@ -149,11 +165,15 @@ export function MultiImageUploadPreview({
     }, []);
 
     function syncInputFiles(nextPreviews: PreviewFile[]) {
-        if (!inputRef.current) return;
+        if (!inputRef.current) {
+            return;
+        }
 
         const dataTransfer = new DataTransfer();
         nextPreviews.forEach((preview) => {
-            if (preview.file) dataTransfer.items.add(preview.file);
+            if (preview.file) {
+                dataTransfer.items.add(preview.file);
+            }
         });
         inputRef.current.files = dataTransfer.files;
     }
@@ -177,7 +197,10 @@ export function MultiImageUploadPreview({
 
     function removeFile(id: string) {
         const preview = previews.find((item) => item.id === id);
-        if (preview) URL.revokeObjectURL(preview.url);
+
+        if (preview) {
+            URL.revokeObjectURL(preview.url);
+        }
 
         const nextPreviews = previews.filter((item) => item.id !== id);
         setPreviews(nextPreviews);
@@ -187,7 +210,24 @@ export function MultiImageUploadPreview({
     function clearFiles() {
         previews.forEach((preview) => URL.revokeObjectURL(preview.url));
         setPreviews([]);
-        if (inputRef.current) inputRef.current.value = '';
+
+        if (inputRef.current) {
+            inputRef.current.value = '';
+        }
+    }
+
+    function setMain(id: string) {
+        const index = previews.findIndex((item) => item.id === id);
+
+        if (index <= 0) {
+            return;
+        }
+
+        const nextPreviews = [...previews];
+        const [item] = nextPreviews.splice(index, 1);
+        nextPreviews.unshift(item);
+        setPreviews(nextPreviews);
+        syncInputFiles(nextPreviews);
     }
 
     return (
@@ -196,15 +236,37 @@ export function MultiImageUploadPreview({
                 {previews.map((preview, index) => (
                     <div
                         key={preview.id}
-                        className="relative h-20 w-20 shrink-0"
+                        className={`group relative h-20 w-20 shrink-0 ${
+                            enableMainSelect && index === 0
+                                ? 'rounded-md ring-2 ring-brand-gold'
+                                : ''
+                        }`}
                     >
-                        <img
-                            src={preview.url}
-                            alt={preview.name}
-                            className="size-full rounded-md border bg-white object-cover"
-                        />
-                        {index === 0 && (
-                            <span className="absolute top-1 left-1 rounded bg-black/70 px-1 py-0.5 text-[9px] font-bold text-white">
+                        {enableMainSelect && index !== 0 ? (
+                            <button
+                                type="button"
+                                onClick={() => setMain(preview.id)}
+                                title="Set as main image"
+                                className="block size-full"
+                            >
+                                <img
+                                    src={preview.url}
+                                    alt={preview.name}
+                                    className="size-full rounded-md border bg-white object-cover"
+                                />
+                                <span className="absolute inset-x-0 bottom-0 rounded-b-md bg-black/70 py-0.5 text-center text-[9px] font-semibold text-white opacity-0 transition group-hover:opacity-100">
+                                    Set as main
+                                </span>
+                            </button>
+                        ) : (
+                            <img
+                                src={preview.url}
+                                alt={preview.name}
+                                className="size-full rounded-md border bg-white object-cover"
+                            />
+                        )}
+                        {enableMainSelect && index === 0 && (
+                            <span className="absolute top-1 left-1 rounded bg-brand-gold px-1 py-0.5 text-[9px] font-bold text-brand-gold-foreground">
                                 Main
                             </span>
                         )}
