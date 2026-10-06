@@ -34,6 +34,13 @@
         <link rel="apple-touch-icon" href="/images/brand/apple-touch-icon.png">
         <link rel="manifest" href="/images/brand/site.webmanifest">
 
+        <script
+            async
+            src="https://www.sabilytics.com/script.js"
+            data-site="w07nok5qitrk"
+            data-domain="khequipmenthub.com"
+        ></script>
+
         @fonts
 
         @viteReactRefresh
