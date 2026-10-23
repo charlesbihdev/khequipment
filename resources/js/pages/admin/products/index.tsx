@@ -332,7 +332,9 @@ function Detail({ label, value }: { label: string; value: string | null }) {
             <p className="text-xs font-bold tracking-wide text-brand-gold uppercase">
                 {label}
             </p>
-            <p className="mt-1 text-foreground">{value || 'Not provided'}</p>
+            <p className="mt-1 whitespace-pre-line text-foreground">
+                {value || 'Not provided'}
+            </p>
         </div>
     );
 }

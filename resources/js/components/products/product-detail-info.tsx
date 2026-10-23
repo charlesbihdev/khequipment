@@ -42,7 +42,7 @@ export function ProductDetailInfo({ product }: ProductDetailInfoProps) {
             {product.description && (
                 <div className="mt-8">
                     <h2 className="text-3xl font-extrabold">Description</h2>
-                    <p className="mt-4 text-xl leading-9 text-muted-foreground">
+                    <p className="mt-4 text-xl leading-9 whitespace-pre-line text-muted-foreground">
                         {product.description}
                     </p>
                 </div>
